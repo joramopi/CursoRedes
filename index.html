@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Permissions-Policy" content="accelerometer=(), autoplay=(), clipboard-write=(), encrypted-media=(), gyroscope=(), picture-in-picture=()">
     <title>Redes de Computadoras - Libro Digital Interactivo</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
@@ -72,7 +73,161 @@
 
         <!-- Main Content Area -->
         <div class="flex-1 p-4 lg:p-10" id="main-content">
-            <!-- El contenido dinámico se cargará aquí -->
+            <!-- Header -->
+            <div class="flex flex-col lg:flex-row justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2 lg:mb-0">Redes de Computadoras</h1>
+                <div class="flex items-center">
+                    <div class="mr-6">
+                        <span class="text-sm text-gray-600">Tu progreso:</span>
+                        <div class="progress-bar mt-1">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-lg">
+                        <i class="fas fa-user text-blue-900"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="w-full mb-6 md:mb-0">
+                        <h2 class="text-2xl font-semibold mb-4 text-blue-900">¡Bienvenido al Libro Digital Interactivo!</h2>
+                        <p class="text-gray-600 mb-4">
+                            Esta guía está diseñada como un material de apoyo estructurado para la asignatura Redes de Computadoras, perteneciente a la Carrera de Computación de la ESPAM MFL. Tiene como propósito facilitar el aprendizaje autónomo y acompañado, integrando principios teóricos, ejemplos contextualizados, actividades prácticas y el uso de simuladores.
+                        </p>
+                        <p class="text-gray-600 mb-6">
+                            El enfoque es práctico-profesionalizante, alineado al perfil de egreso del ingeniero en Computación, e incorpora metodologías activas como el Aprendizaje Basado en Problemas (ABP), clase invertida y talleres con Cisco Packet Tracer.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <button id="start-journey" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                                <i class="fas fa-play-circle mr-2"></i>
+                                Comenzar recorrido
+                            </button>
+                            <a href="informacion.html" class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Más información
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Profile Section -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/4 flex justify-center mb-6 md:mb-0">
+                        <div class="rounded-full w-40 h-40 overflow-hidden bg-gray-200 flex items-center justify-center border-4 border-blue-100">
+                            <img src="images/FotoDocente.jpg" alt="Mgtr. Joffre Moreira Pico" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="md:w-3/4 md:pl-8">
+                        <h2 class="text-2xl font-semibold text-blue-900 mb-2">Mgtr. Joffre Moreira Pico</h2>
+                        <p class="text-gray-600 mb-4">Docente de la asignatura Redes de Computadoras</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-700">Correo Electrónico</p>
+                                    <p class="text-gray-600">jmoreira@espam.edu.ec</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-phone-alt text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-700">Teléfono</p>
+                                    <p class="text-gray-600">+593 98 765 4321</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-clock text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-700">Horario de Atención</p>
+                                    <p class="text-gray-600">Lunes a Viernes: 08:00 - 17:00</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-700">Oficina</p>
+                                    <p class="text-gray-600">Edificio de Sistemas, Planta Baja</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Information Section -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-semibold text-blue-900 mb-6">Información del Curso</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-800 mb-2">Código</h3>
+                        <p class="text-gray-700">CC-0601</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-800 mb-2">Nivel</h3>
+                        <p class="text-gray-700">Sexto Nivel</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-800 mb-2">Créditos</h3>
+                        <p class="text-gray-700">5</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-800 mb-2">Horas Teóricas</h3>
+                        <p class="text-gray-700">3 por semana</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-800 mb-2">Horas Prácticas</h3>
+                        <p class="text-gray-700">2 por semana</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-800 mb-2">Duración</h3>
+                        <p class="text-gray-700">16 semanas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Objectives Section -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-semibold text-blue-900 mb-6">Objetivos de Aprendizaje</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <p class="text-gray-700">Comprender los conceptos fundamentales de las redes de computadoras y su importancia en el mundo actual.</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <p class="text-gray-700">Identificar los diferentes tipos de redes, topologías y protocolos de comunicación.</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <p class="text-gray-700">Aplicar los conocimientos teóricos en la resolución de problemas prácticos de redes.</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <p class="text-gray-700">Desarrollar habilidades para el diseño e implementación de redes de computadoras.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección del video (inicialmente oculta) -->
+            <div id="video-section" class="hidden w-full">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold text-blue-900">Video de Introducción</h2>
+                        <button id="back-to-home" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                            <i class="fas fa-times mr-1"></i>
+                            Cerrar
+                        </button>
+                    </div>
+                    <div id="video-container" class="w-full max-w-4xl mx-auto">
+                        <!-- El iframe se insertará aquí por JavaScript -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     

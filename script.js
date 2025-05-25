@@ -1,424 +1,140 @@
-// Datos del libro
-const bookData = {
-    unidades: [
-        {
-            id: 'unidad1',
-            titulo: 'Unidad 1: Introducción a las Redes de Computadoras',
-            descripcion: 'Conceptos básicos, clasificación de redes, modelos de referencia OSI y TCP/IP, encapsulamiento de datos.',
-            duracion: '6-8 horas',
-            disponible: true,
-            contenido: ''
-        },
-        // ... (más unidades)
-    ]
-};
-
 // Variables globales
 let currentUnitIndex = 0;
 
 // Inicialización
-document.addEventListener('DOMContentLoaded', () => {
-    // Cargar la página de inicio
-    loadHomePage();
-    
+function initApp() {
     // Configurar eventos de navegación
     setupNavigation();
     
     // Iniciar animación de la barra de progreso
     startProgressAnimation();
     
-    // Configurar evento para el botón de inicio del menú
-    document.getElementById('menu-inicio')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        loadHomePage();
-    });
+    // Configurar manejadores de eventos
+    setupEventListeners();
+}
 
-    // Mostrar/ocultar submenú de unidades
-    document.getElementById('menu-unidades')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const submenu = document.getElementById('submenu-unidades');
-        submenu.classList.toggle('hidden');
-        
-        // Cerrar otros submenús si están abiertos
-        document.querySelectorAll('#submenu-unidades').forEach(menu => {
-            if (menu !== submenu) {
-                menu.classList.add('hidden');
-            }
-        });
-    });
-
-    // Cerrar menús al hacer clic fuera de ellos
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('#menu-unidades') && !e.target.closest('#submenu-unidades')) {
-            document.getElementById('submenu-unidades')?.classList.add('hidden');
-        }
-    });
-
-    // Manejar clic en las unidades del submenú
-    document.querySelectorAll('.unidad-item').forEach(item => {
-        item.addEventListener('click', (e) => {
+// Configurar todos los manejadores de eventos
+function setupEventListeners() {
+    // Menú de inicio
+    document.addEventListener('click', function(e) {
+        // Menú de unidades
+        if (e.target.closest('#menu-unidades')) {
             e.preventDefault();
-            const unidadIndex = parseInt(item.dataset.unidad);
-            loadUnit(unidadIndex);
-            // Ocultar el submenú después de seleccionar una unidad
-            document.getElementById('submenu-unidades')?.classList.add('hidden');
-        });
-    });
-});
-
-// Cargar la página de inicio
-function loadHomePage() {
-    const mainContent = document.getElementById('main-content');
-    
-    mainContent.innerHTML = `
-        <!-- Header -->
-        <div class="flex flex-col lg:flex-row justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2 lg:mb-0">Redes de Computadoras</h1>
-            <div class="flex items-center">
-                <div class="mr-6">
-                    <span class="text-sm text-gray-600">Tu progreso:</span>
-                    <div class="progress-bar mt-1">
-                        <div class="progress-fill"></div>
-                    </div>
-                </div>
-                <div class="bg-white p-2 rounded-full shadow-lg">
-                    <i class="fas fa-user text-blue-900"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Welcome Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="w-full mb-6 md:mb-0">
-                    <h2 class="text-2xl font-semibold mb-4 text-blue-900">¡Bienvenido al Libro Digital Interactivo!</h2>
-                    <p class="text-gray-600 mb-4">
-                        Esta guía está diseñada como un material de apoyo estructurado para la asignatura Redes de Computadoras, perteneciente a la Carrera de Computación de la ESPAM MFL. Tiene como propósito facilitar el aprendizaje autónomo y acompañado, integrando principios teóricos, ejemplos contextualizados, actividades prácticas y el uso de simuladores.
-                    </p>
-                    <p class="text-gray-600 mb-6">
-                        El enfoque es práctico-profesionalizante, alineado al perfil de egreso del ingeniero en Computación, e incorpora metodologías activas como el Aprendizaje Basado en Problemas (ABP), clase invertida y talleres con Cisco Packet Tracer.
-                    </p>
-                    <div class="flex flex-wrap gap-4">
-                        <button id="start-journey" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
-                            <i class="fas fa-play-circle mr-2"></i>
-                            Comenzar recorrido
-                        </button>
-                        <a href="informacion.html" class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            Más información
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Sección del video (inicialmente oculta) -->
-            <div id="video-section" class="hidden mt-8">
-                <div class="aspect-w-16 aspect-h-9 w-full max-w-4xl mx-auto">
-                    <iframe 
-                        id="youtube-video"
-                        class="w-full h-96 rounded-lg shadow-lg"
-                        src=""
-                        title="Video de introducción a Redes de Computadoras"
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <div class="mt-4 text-center">
-                    <button id="back-to-home" class="text-blue-600 hover:text-blue-800 font-medium flex items-center mx-auto">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Volver al inicio
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Professor Info Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/4 flex justify-center mb-6 md:mb-0">
-                    <div class="rounded-full w-40 h-40 overflow-hidden bg-gray-200 flex items-center justify-center avatar border-4 border-blue-100">
-                        <img src="images/FotoDocente.jpg" alt="Mgtr. Joffre Moreira Pico" class="w-full h-full object-cover">
-                    </div>
-                </div>
-                <div class="md:w-3/4 md:pl-6">
-                    <h2 class="text-2xl font-semibold mb-2 text-blue-900">Docente: Mgtr. Joffre Moreira Pico</h2>
-                    <p class="mb-1 text-gray-700"><i class="fas fa-briefcase mr-2 text-blue-600"></i> Director de la Carrera de Computación - ESPAM MFL</p>
-                    <p class="mb-1 text-gray-700"><i class="fas fa-users mr-2 text-blue-600"></i> Grupo de investigación SISCOM</p>
-                    <p class="mb-1 text-gray-700"><i class="fas fa-award mr-2 text-blue-600"></i> Investigador SENESCYT: REG-INV-18-02646</p>
-                    <p class="mb-4 text-gray-700"><i class="fas fa-graduation-cap mr-2 text-blue-600"></i> Docente Titular [Tiempo completo]</p>
-                    
-                    <div class="flex flex-wrap gap-3">
-                        <a href="mailto:jmoreira@espam.edu.ec" class="flex items-center px-3 py-1.5 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors">
-                            <i class="fas fa-envelope mr-2 text-blue-600"></i>
-                            jmoreira@espam.edu.ec
-                        </a>
-                        <a href="tel:+593959143015" class="flex items-center px-3 py-1.5 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors">
-                            <i class="fas fa-phone mr-2 text-blue-600"></i>
-                            +593 959143015
-                        </a>
-                        <a href="https://ec.linkedin.com/in/joramopi" target="_blank" class="flex items-center px-3 py-1.5 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors">
-                            <i class="fab fa-linkedin mr-2 text-blue-600"></i>
-                            Perfil de LinkedIn
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Units Section -->
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">Unidades de Estudio</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="units-grid">
-            ${bookData.unidades.map((unidad, index) => `
-                <div class="card bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="unit-card bg-gradient-to-br from-blue-500 to-indigo-600">
-                        <div class="unit-overlay"></div>
-                        <div class="unit-content">
-                            <h3 class="text-xl font-bold mb-1">${unidad.titulo.split(':')[0]}</h3>
-                            <p class="text-sm text-gray-200">${unidad.titulo.split(':')[1]}</p>
-                        </div>
-                        <div class="absolute top-0 right-0 m-4">
-                            <span class="${unidad.disponible ? 'bg-green-500' : 'bg-blue-500'} text-white text-xs px-2 py-1 rounded-full">
-                                ${unidad.disponible ? 'Disponible' : 'Próximamente'}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <p class="text-sm text-gray-600 mb-3">${unidad.descripcion}</p>
-                        <div class="flex justify-between items-center">
-                            <div class="text-xs text-gray-500">
-                                <i class="fas fa-clock mr-1"></i> ${unidad.duracion}
-                            </div>
-                            <button class="unit-btn ${unidad.disponible ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'} text-white px-4 py-2 rounded text-sm transition-colors" 
-                                    data-unit="${index}" ${unidad.disponible ? '' : 'disabled'}>
-                                ${unidad.disponible ? 'Explorar' : 'No disponible'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-    `;
-    
-    // Configurar eventos para los botones de las unidades
-    document.querySelectorAll('.unit-btn:not([disabled])').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const unitIndex = parseInt(btn.dataset.unit);
-            loadUnit(unitIndex);
-        });
-    });
-    
-    // Configurar evento para el botón de comenzar
-    document.getElementById('start-journey')?.addEventListener('click', () => {
-        loadUnit(0); // Cargar la primera unidad disponible
-    });
-}
-
-// Cargar una unidad específica
-function loadUnit(index) {
-    if (index < 0 || index >= bookData.unidades.length) return;
-    
-    const unidad = bookData.unidades[index];
-    currentUnitIndex = index;
-    
-    const mainContent = document.getElementById('main-content');
-    mainContent.innerHTML = `
-        <!-- Breadcrumb -->
-        <nav class="flex mb-6" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                <li class="inline-flex items-center">
-                    <a href="#" class="text-gray-700 hover:text-blue-600 inline-flex items-center text-sm font-medium" id="back-to-home">
-                        <i class="fas fa-home mr-2"></i>
-                        Inicio
-                    </a>
-                </li>
-                <li aria-current="page">
-                    <div class="flex items-center">
-                        <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
-                        <span class="text-gray-500 text-sm font-medium">${unidad.titulo}</span>
-                    </div>
-                </li>
-            </ol>
-        </nav>
+            const submenu = document.getElementById('submenu-unidades');
+            if (submenu) submenu.classList.toggle('hidden');
+            e.stopPropagation();
+        }
         
-        <!-- Contenido de la unidad -->
-        ${unidad.contenido}
-    `;
-    
-    // Configurar evento para volver al inicio
-    document.getElementById('back-to-home')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        loadHomePage();
-    });
-    
-    // Configurar eventos de navegación
-    setupNavigation();
-}
-
-// Configurar la navegación entre unidades
-function setupNavigation() {
-    // Navegación con teclado
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') {
-            // Siguiente unidad si existe
-            if (currentUnitIndex < bookData.unidades.length - 1) {
-                loadUnit(currentUnitIndex + 1);
+        // Botón de comenzar recorrido
+        if (e.target.closest('#start-journey')) {
+            e.preventDefault();
+            showVideo();
+        }
+        
+        // Botón de volver al inicio
+        if (e.target.closest('#back-to-home')) {
+            e.preventDefault();
+            backToHome();
+        }
+        
+        // Cerrar menú si se hace clic fuera de él
+        if (!e.target.closest('#menu-unidades') && !e.target.closest('#submenu-unidades')) {
+            const submenu = document.getElementById('submenu-unidades');
+            if (submenu && !submenu.classList.contains('hidden')) {
+                submenu.classList.add('hidden');
             }
-        } else if (e.key === 'ArrowLeft') {
-            // Unidad anterior si existe
-            if (currentUnitIndex > 0) {
-                loadUnit(currentUnitIndex - 1);
-            }
-        } else if (e.key === 'Escape') {
-            // Volver al inicio
-            loadHomePage();
         }
     });
-}
-
-// Iniciar animación de la barra de progreso
-function startProgressAnimation() {
-    setTimeout(() => {
-        const progressFill = document.querySelector('.progress-fill');
-        if (progressFill) {
-            progressFill.style.width = '75%';
-        }
-    }, 300);
-}
-
-// Función para mostrar notificaciones
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white ${
-        type === 'success' ? 'bg-green-500' : 
-        type === 'error' ? 'bg-red-500' : 
-        'bg-blue-500'
-    }`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    // Eliminar la notificación después de 3 segundos
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transition = 'opacity 0.5s ease-out';
-        setTimeout(() => {
-            notification.remove();
-        }, 500);
-    }, 3000);
 }
 
 // Función para mostrar el video de YouTube
 function showVideo() {
-    const mainContent = document.getElementById('main-content');
+    console.log('Mostrando video...');
     
-    if (mainContent) {
-        mainContent.innerHTML = `
-            <!-- Header -->
-            <div class="flex flex-col lg:flex-row justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 mb-2 lg:mb-0">Redes de Computadoras</h1>
-                <div class="flex items-center">
-                    <div class="mr-6">
-                        <span class="text-sm text-gray-600">Tu progreso:</span>
-                        <div class="progress-bar mt-1">
-                            <div class="progress-fill"></div>
-                        </div>
-                    </div>
-                    <div class="bg-white p-2 rounded-full shadow-lg">
-                        <i class="fas fa-user text-blue-900"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sección del video -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <div class="aspect-w-16 aspect-h-9 w-full max-w-4xl mx-auto">
-                    <iframe 
-                        id="youtube-video"
-                        class="w-full h-96 rounded-lg shadow-lg"
-                        src="https://www.youtube.com/embed/alkQaRYmMiA?autoplay=1"
-                        title="Video de introducción a Redes de Computadoras"
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <div class="mt-6 text-center">
-                    <button id="back-to-home" class="inline-flex items-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Volver al menú principal
-                    </button>
-                </div>
-            </div>
-        `;
+    const videoSection = document.getElementById('video-section');
+    const videoContainer = document.getElementById('video-container');
+    
+    if (!videoSection || !videoContainer) {
+        console.error('No se encontró videoSection o videoContainer');
+        return;
+    }
+    
+    try {
+        // Crear el iframe del video
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('width', '100%');
+        iframe.setAttribute('height', '500');
+        iframe.setAttribute('src', 'https://www.youtube.com/embed/alkQaRYmMiA?autoplay=1&rel=0');
+        iframe.setAttribute('title', 'Video de introducción a Redes de Computadoras');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.style.borderRadius = '0.5rem';
+        iframe.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
         
-        // Desplazarse al inicio de la página
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Limpiar el contenedor y agregar el iframe
+        videoContainer.innerHTML = '';
+        videoContainer.appendChild(iframe);
+        
+        // Mostrar la sección del video
+        videoSection.classList.remove('hidden');
+        
+        // Desplazarse a la sección del video
+        videoSection.scrollIntoView({ behavior: 'smooth' });
+        
+        // Configurar el evento para el botón de cerrar
+        const backButton = document.getElementById('back-to-home');
+        if (backButton) {
+            backButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                backToHome();
+            });
+        }
+        
+        console.log('Video mostrado correctamente');
+    } catch (error) {
+        console.error('Error al mostrar el video:', error);
     }
 }
 
 // Función para volver a la página de inicio
 function backToHome() {
-    // Recargar la página para volver al estado inicial
-    window.location.href = 'index.html';
+    const videoSection = document.getElementById('video-section');
+    const videoContainer = document.getElementById('video-container');
+    
+    if (!videoSection || !videoContainer) return;
+    
+    try {
+        // Detener el video limpiando el contenedor
+        videoContainer.innerHTML = '';
+        
+        // Ocultar la sección del video
+        videoSection.classList.add('hidden');
+        
+        console.log('Video cerrado');
+    } catch (error) {
+        console.error('Error al cerrar el video:', error);
+    }
 }
 
-// Configurar eventos después de cargar el DOM
-document.addEventListener('DOMContentLoaded', () => {
-    // Cargar la página de inicio
-    loadHomePage();
-    
-    // Configurar eventos de navegación
-    setupNavigation();
-    
-    // Iniciar animación de la barra de progreso
-    startProgressAnimation();
-    
-    // Configurar evento para el botón de inicio del menú
-    document.getElementById('menu-inicio')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        loadHomePage();
-    });
+// Configurar la navegación entre unidades
+function setupNavigation() {
+    // Aquí iría la lógica de navegación entre unidades
+    console.log('Configurando navegación...');
+}
 
-    // Mostrar/ocultar submenú de unidades
-    document.getElementById('menu-unidades')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const submenu = document.getElementById('submenu-unidades');
-        submenu.classList.toggle('hidden');
-        
-        // Cerrar otros submenús si están abiertos
-        document.querySelectorAll('#submenu-unidades').forEach(menu => {
-            if (menu !== submenu) {
-                menu.classList.add('hidden');
-            }
-        });
-    });
+// Iniciar animación de la barra de progreso
+function startProgressAnimation() {
+    const progressFill = document.querySelector('.progress-fill');
+    if (progressFill) {
+        // Simular progreso (puedes reemplazarlo con el progreso real)
+        progressFill.style.width = '65%';
+    }
+}
 
-    // Cerrar menús al hacer clic fuera de ellos
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('#menu-unidades') && !e.target.closest('#submenu-unidades')) {
-            document.getElementById('submenu-unidades')?.classList.add('hidden');
-        }
-    });
-
-    // Manejar clic en las unidades del submenú
-    document.querySelectorAll('.unidad-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const unidadIndex = parseInt(item.dataset.unidad);
-            loadUnit(unidadIndex);
-            // Ocultar el submenú después de seleccionar una unidad
-            document.getElementById('submenu-unidades')?.classList.add('hidden');
-        });
-    });
-    
-    // Configurar evento para el botón de comenzar recorrido
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('#start-journey')) {
-            e.preventDefault();
-            showVideo();
-        } else if (e.target.closest('#back-to-home')) {
-            e.preventDefault();
-            backToHome();
-        }
-    });
-});
+// Inicializar la aplicación cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}

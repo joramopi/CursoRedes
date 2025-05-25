@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Interactiva - Unidad 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.3s;
+        }
+        .fade-enter, .fade-leave-to {
+            opacity: 0;
+        }
+        .option-selected {
+            @apply bg-blue-100 border-blue-500;
+        }
+        .correct-answer {
+            @apply bg-green-100 border-green-500;
+        }
+        .wrong-answer {
+            @apply bg-red-100 border-red-500;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="app" class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white shadow-md">
+            <div class="container mx-auto px-4 py-6">
+                <h1 class="text-2xl md:text-3xl font-bold">Evaluación Interactiva</h1>
+                <p class="text-blue-100">Unidad 1: Introducción a las Redes de Computadoras</p>
+                
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                    <div class="bg-blue-400 h-2.5 rounded-full transition-all duration-300" 
+                         :style="{width: (currentQuestionIndex / questions.length * 100) + '%'}"></div>
+                </div>
+                <div class="flex justify-between text-sm mt-2">
+                    <span>Pregunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}</span>
+                    <span>{{ Math.round((currentQuestionIndex / questions.length) * 100) }}% Completado</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <!-- Question -->
+                <div v-if="!quizCompleted" class="question-container">
+                    <h2 class="text-xl font-semibold mb-6">{{ currentQuestion.question }}</h2>
+                    
+                    <!-- Multiple Choice -->
+                    <div v-if="currentQuestion.type === 'multiple'" class="space-y-3">
+                        <div v-for="(option, index) in currentQuestion.options" :key="index"
+                             @click="selectAnswer(option)"
+                             class="p-4 border rounded-lg cursor-pointer transition-colors"
+                             :class="getOptionClass(option)">
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 rounded-full border flex items-center justify-center mr-3 flex-shrink-0"
+                                     :class="getOptionBulletClass(option)">
+                                    <span v-if="isOptionSelected(option)" class="text-xs">
+                                        {{ isOptionCorrect(option) ? '✓' : '✗' }}
+                                    </span>
+                                </div>
+                                <span>{{ option.text }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- True/False -->
+                    <div v-else-if="currentQuestion.type === 'truefalse'" class="space-y-3">
+                        <div v-for="option in ['Verdadero', 'Falso']" :key="option"
+                             @click="selectAnswer(option)"
+                             class="p-4 border rounded-lg cursor-pointer transition-colors"
+                             :class="getOptionClass(option)">
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 rounded-full border flex items-center justify-center mr-3 flex-shrink-0"
+                                     :class="getOptionBulletClass(option)">
+                                    <span v-if="isOptionSelected(option)" class="text-xs">
+                                        {{ isOptionCorrect(option) ? '✓' : '✗' }}
+                                    </span>
+                                </div>
+                                <span>{{ option }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Matching -->
+                    <div v-else-if="currentQuestion.type === 'matching'" class="space-y-4">
+                        <div v-for="(item, index) in currentQuestion.items" :key="index" class="flex items-center">
+                            <span class="w-1/3 font-medium">{{ item.term }}</span>
+                            <select v-model="userAnswers[currentQuestionIndex][index]" 
+                                    class="flex-1 ml-4 p-2 border rounded"
+                                    :class="{'bg-green-50 border-green-500': isMatchingCorrect(index)}"
+                                    :disabled="quizSubmitted">
+                                <option value="">Selecciona una opción</option>
+                                <option v-for="(option, optIndex) in currentQuestion.options" 
+                                        :key="optIndex" 
+                                        :value="option"
+                                        :disabled="isOptionUsed(option, index)">
+                                    {{ option }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Feedback -->
+                    <div v-if="showFeedback" class="mt-6 p-4 rounded-lg" 
+                         :class="isAnswerCorrect ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'">
+                        <p class="font-medium">
+                            <i :class="isAnswerCorrect ? 'fas fa-check-circle' : 'fas fa-times-circle'" class="mr-2"></i>
+                            {{ isAnswerCorrect ? '¡Correcto!' : 'Incorrecto' }}
+                        </p>
+                        <p class="mt-2" v-html="currentQuestion.explanation"></p>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between mt-8">
+                        <button @click="previousQuestion" 
+                                :disabled="currentQuestionIndex === 0"
+                                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50">
+                            <i class="fas fa-arrow-left mr-2"></i>Anterior
+                        </button>
+                        
+                        <button v-if="!isLastQuestion" 
+                                @click="nextQuestion" 
+                                :disabled="!isAnswerSelected"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50">
+                            Siguiente<i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+
+                        <button v-else 
+                                @click="submitQuiz" 
+                                :disabled="!isAnswerSelected"
+                                class="px-6 py-2 bg-green-600 text-white rounded-lg disabled:opacity-50">
+                            Finalizar<i class="fas fa-check ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div v-else class="text-center py-8">
+                    <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-trophy text-4xl text-yellow-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">¡Evaluación Completada!</h2>
+                    <p class="text-gray-600 mb-6">Has completado la evaluación de la Unidad 1</p>
+                    
+                    <div class="bg-blue-50 p-6 rounded-lg max-w-md mx-auto mb-8">
+                        <div class="text-4xl font-bold text-blue-600 mb-2">{{ score }}%</div>
+                        <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                            <div class="bg-blue-600 h-4 rounded-full" 
+                                 :style="{width: score + '%'}"></div>
+                        </div>
+                        <p class="text-sm text-gray-600">
+                            {{ correctAnswers }} de {{ questions.length }} respuestas correctas
+                        </p>
+                    </div>
+
+                    <div class="space-y-4 max-w-md mx-auto text-left mb-8">
+                        <h3 class="font-semibold text-lg">Resumen de respuestas:</h3>
+                        <div v-for="(question, index) in questions" :key="index"
+                             class="p-3 border rounded-lg"
+                             :class="{'bg-green-50 border-green-200': isQuestionCorrect(index), 'bg-red-50 border-red-200': !isQuestionCorrect(index)}">
+                            <p class="font-medium">Pregunta {{ index + 1 }}: {{ isQuestionCorrect(index) ? '✓ Correcta' : '✗ Incorrecta' }}</p>
+                        </div>
+                    </div>
+
+                    <button @click="resetQuiz" 
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-redo mr-2"></i>Reintentar
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto px-4 text-center">
+                <p>© 2023 Curso de Redes de Computadoras</p>
+                <p class="text-gray-400 text-sm mt-2">Instituto Tecnológico de Estudios Superiores de los Ríos</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Cargar Vue.js localmente -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.min.js"></script>
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                // Questions data
+                const questions = [
+                    {
+                        type: 'multiple',
+                        question: '¿Cuál de los siguientes NO es un tipo de red según su alcance?',
+                        options: [
+                            { text: 'LAN', correct: false },
+                            { text: 'WAN', correct: false },
+                            { text: 'VPN', correct: true },
+                            { text: 'MAN', correct: false }
+                        ],
+                        explanation: 'VPN (Red Privada Virtual) no es un tipo de red según su alcance, sino una tecnología que permite extender una red privada sobre una red pública.'
+                    },
+                    {
+                        type: 'truefalse',
+                        question: 'El modelo OSI tiene 7 capas.',
+                        correctAnswer: 'Verdadero',
+                        explanation: 'Correcto. El modelo OSI (Interconexión de Sistemas Abiertos) tiene 7 capas: Física, Enlace de Datos, Red, Transporte, Sesión, Presentación y Aplicación.'
+                    },
+                    {
+                        type: 'matching',
+                        question: 'Relaciona cada capa del modelo OSI con su función principal:',
+                        items: [
+                            { term: 'Capa Física', correct: 'Transmisión de bits' },
+                            { term: 'Capa de Red', correct: 'Enrutamiento de paquetes' },
+                            { term: 'Capa de Transporte', correct: 'Control de flujo' },
+                            { term: 'Capa de Aplicación', correct: 'Interfaz con el usuario' }
+                        ],
+                        options: [
+                            'Transmisión de bits',
+                            'Enrutamiento de paquetes',
+                            'Control de flujo',
+                            'Interfaz con el usuario'
+                        ]
+                    }
+                ];
+
+                // State
+                const currentQuestionIndex = ref(0);
+                const userAnswers = ref(Array(questions.length).fill().map(() => ({})));
+                const quizSubmitted = ref(false);
+                const quizCompleted = ref(false);
+                const showFeedback = ref(false);
+                const isAnswerCorrect = ref(false);
+
+                // Computed
+                const currentQuestion = computed(() => questions[currentQuestionIndex.value]);
+                const isLastQuestion = computed(() => currentQuestionIndex.value === questions.length - 1);
+                const isAnswerSelected = computed(() => {
+                    if (currentQuestion.value.type === 'matching') {
+                        return Object.keys(userAnswers.value[currentQuestionIndex.value]).length > 0;
+                    }
+                    return userAnswers.value[currentQuestionIndex.value] !== undefined;
+                });
+
+                const correctAnswers = computed(() => {
+                    return questions.reduce((count, question, index) => {
+                        return count + (isQuestionCorrect(index) ? 1 : 0);
+                    }, 0);
+                });
+
+                const score = computed(() => {
+                    return Math.round((correctAnswers.value / questions.length) * 100);
+                });
+
+                // Methods
+                function selectAnswer(answer) {
+                    if (quizSubmitted.value) return;
+                    
+                    if (currentQuestion.value.type === 'multiple') {
+                        userAnswers.value[currentQuestionIndex.value] = answer;
+                    } else if (currentQuestion.value.type === 'truefalse') {
+                        userAnswers.value[currentQuestionIndex.value] = answer;
+                    }
+                    
+                    checkAnswer();
+                }
+
+                function checkAnswer() {
+                    if (currentQuestion.value.type === 'multiple') {
+                        isAnswerCorrect.value = userAnswers.value[currentQuestionIndex.value]?.correct === true;
+                    } else if (currentQuestion.value.type === 'truefalse') {
+                        isAnswerCorrect.value = userAnswers.value[currentQuestionIndex.value] === currentQuestion.value.correctAnswer;
+                    } else if (currentQuestion.value.type === 'matching') {
+                        const currentAnswers = userAnswers.value[currentQuestionIndex.value];
+                        isAnswerCorrect.value = Object.entries(currentAnswers).every(([index, answer]) => {
+                            return answer === currentQuestion.value.items[index].correct;
+                        });
+                    }
+                    
+                    showFeedback.value = true;
+                    quizSubmitted.value = true;
+                }
+
+                function nextQuestion() {
+                    if (currentQuestionIndex.value < questions.length - 1) {
+                        currentQuestionIndex.value++;
+                        showFeedback.value = false;
+                        quizSubmitted.value = false;
+                    }
+                }
+
+                function previousQuestion() {
+                    if (currentQuestionIndex.value > 0) {
+                        currentQuestionIndex.value--;
+                        showFeedback.value = false;
+                        quizSubmitted.value = false;
+                    }
+                }
+
+                function submitQuiz() {
+                    quizCompleted.value = true;
+                }
+
+                function resetQuiz() {
+                    currentQuestionIndex.value = 0;
+                    userAnswers.value = Array(questions.length).fill().map(() => ({}));
+                    quizSubmitted.value = false;
+                    quizCompleted.value = false;
+                    showFeedback.value = false;
+                }
+
+                function isOptionSelected(option) {
+                    if (currentQuestion.value.type === 'multiple') {
+                        return userAnswers.value[currentQuestionIndex.value] === option;
+                    } else if (currentQuestion.value.type === 'truefalse') {
+                        return userAnswers.value[currentQuestionIndex.value] === option;
+                    }
+                    return false;
+                }
+
+                function isOptionCorrect(option) {
+                    if (!quizSubmitted.value) return false;
+                    
+                    if (currentQuestion.value.type === 'multiple') {
+                        return option.correct;
+                    } else if (currentQuestion.value.type === 'truefalse') {
+                        return option === currentQuestion.value.correctAnswer;
+                    }
+                    return false;
+                }
+
+                function getOptionClass(option) {
+                    if (!quizSubmitted.value) {
+                        return isOptionSelected(option) ? 'option-selected border-2' : 'hover:bg-gray-50';
+                    }
+                    
+                    if (isOptionCorrect(option)) {
+                        return 'correct-answer border-2';
+                    } else if (isOptionSelected(option) && !isOptionCorrect(option)) {
+                        return 'wrong-answer border-2';
+                    }
+                    return 'opacity-70';
+                }
+
+                function getOptionBulletClass(option) {
+                    if (!quizSubmitted.value) {
+                        return isOptionSelected(option) ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-400';
+                    }
+                    
+                    if (isOptionCorrect(option)) {
+                        return 'border-green-500 bg-green-500 text-white';
+                    } else if (isOptionSelected(option) && !isOptionCorrect(option)) {
+                        return 'border-red-500 bg-red-500 text-white';
+                    }
+                    return 'border-gray-300';
+                }
+
+                function isMatchingCorrect(index) {
+                    if (!quizSubmitted.value) return false;
+                    const answer = userAnswers.value[currentQuestionIndex.value][index];
+                    return answer === currentQuestion.value.items[index].correct;
+                }
+
+                function isOptionUsed(option, currentIndex) {
+                    if (!quizSubmitted.value) {
+                        const currentAnswers = Object.values(userAnswers.value[currentQuestionIndex.value] || {});
+                        return currentAnswers.includes(option) && userAnswers.value[currentQuestionIndex.value][currentIndex] !== option;
+                    }
+                    return false;
+                }
+
+                function isQuestionCorrect(questionIndex) {
+                    const question = questions[questionIndex];
+                    
+                    if (question.type === 'multiple') {
+                        return userAnswers.value[questionIndex]?.correct === true;
+                    } else if (question.type === 'truefalse') {
+                        return userAnswers.value[questionIndex] === question.correctAnswer;
+                    } else if (question.type === 'matching') {
+                        const answers = userAnswers.value[questionIndex] || {};
+                        return Object.entries(answers).every(([index, answer]) => {
+                            return answer === question.items[index].correct;
+                        });
+                    }
+                    return false;
+                }
+
+                return {
+                    questions,
+                    currentQuestionIndex,
+                    userAnswers,
+                    quizSubmitted,
+                    quizCompleted,
+                    showFeedback,
+                    isAnswerCorrect,
+                    currentQuestion,
+                    isLastQuestion,
+                    isAnswerSelected,
+                    correctAnswers,
+                    score,
+                    selectAnswer,
+                    nextQuestion,
+                    previousQuestion,
+                    submitQuiz,
+                    resetQuiz,
+                    isOptionSelected,
+                    isOptionCorrect,
+                    getOptionClass,
+                    getOptionBulletClass,
+                    isMatchingCorrect,
+                    isOptionUsed,
+                    isQuestionCorrect
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

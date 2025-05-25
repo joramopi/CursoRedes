@@ -93,21 +93,724 @@
                         </div>
                     </div>
 
-                    <!-- Contenido de la unidad (se llenará con la información que proporciones) -->
-                    <div id="contenido-unidad" class="prose max-w-none">
-                        <!-- El contenido de la unidad se cargará aquí -->
+                    <!-- Barra de pestañas -->
+                    <div class="border-b border-gray-200 mb-8">
+                        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                            <button class="tab-button active border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="contenido">
+                                <i class="fas fa-book-open mr-2"></i>Contenido
+                            </button>
+                            <button class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="recursos">
+                                <i class="fas fa-folder-open mr-2"></i>Recursos
+                            </button>
+                            <button class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="actividades">
+                                <i class="fas fa-tasks mr-2"></i>Actividades Autónomas
+                            </button>
+                            <button class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="test">
+                                <i class="fas fa-question-circle mr-2"></i>Test de práctica
+                            </button>
+                        </nav>
                     </div>
 
-                    <!-- Navegación entre secciones -->
-                    <div class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center">
-                        <button class="btn btn-outline flex items-center opacity-50 cursor-not-allowed">
-                            <i class="fas fa-arrow-left mr-2"></i> Anterior
-                        </button>
-                        <div class="text-sm text-gray-500">Sección 1 de 1</div>
-                        <button class="btn btn-primary flex items-center">
-                            Siguiente <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
+                    <!-- Contenido de las pestañas -->
+                    <div id="contenido-unidad" class="tab-content">
+                        <!-- Pestaña de Contenido -->
+                        <div id="contenido" class="tab-pane active">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">Unidad 1: Introducción a las Redes de Computadoras</h2>
+                            
+                            <!-- 1.1 ¿Qué es una red de computadoras? -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-semibold text-blue-800 mb-3">1.1. ¿Qué es una red de computadoras?</h3>
+                                <div class="bg-blue-50 p-6 rounded-lg">
+                                    <p class="text-gray-700 mb-4">Imagina que tu computadora pudiera hablar con otras. Compartir archivos, jugar en equipo, imprimir en la misma impresora o simplemente acceder a Internet. Todo eso es posible gracias a una red de computadoras. En palabras simples, una red es un conjunto de dispositivos (como computadoras, impresoras o móviles) conectados entre sí para intercambiar información y recursos.</p>
+                                    <div class="bg-white p-4 border-l-4 border-blue-500 italic">
+                                        <p>"Una red de computadoras es un sistema de interconexión entre dispositivos autónomos que se comunican para compartir información y recursos" (Lowe, 2016, p. 7).</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 1.2 Ventajas de usar redes -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-semibold text-blue-800 mb-3">1.2. Ventajas de usar redes</h3>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                                        <ul class="space-y-2">
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                                <span>Compartir archivos y documentos sin usar USB.</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                                <span>Acceder a Internet desde varios dispositivos.</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                                <span>Imprimir desde varias computadoras a una misma impresora.</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                                <span>Hacer videollamadas o jugar en línea.</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                                <span>Hacer copias de seguridad automáticas.</span>
+                                            </li>
+                                        </ul>
+                                        <div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-sm">
+                                            <p>"Las redes permiten compartir información, reducir costos y facilitar la comunicación" (Stallings, 2004, p. 14).</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-blue-50 p-6 rounded-lg flex items-center justify-center">
+                                        <img src="https://cdn.pixabay.com/photo/2016/03/26/22/21/smartphone-1281638_640.jpg" alt="Red de dispositivos" class="rounded-lg shadow-md max-h-64">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 1.3 Elementos básicos de una red -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-semibold text-blue-800 mb-3">1.3. Elementos básicos de una red</h3>
+                                <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Elemento</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ejemplo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Dispositivos finales</td>
+                                                <td class="px-6 py-4">Computadoras, impresoras, teléfonos</td>
+                                                <td class="px-6 py-4">Laptop, celular</td>
+                                            </tr>
+                                            <tr class="bg-gray-50">
+                                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Medios de transmisión</td>
+                                                <td class="px-6 py-4">Por donde viajan los datos</td>
+                                                <td class="px-6 py-4">Cables, Wi-Fi</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Dispositivos de red</td>
+                                                <td class="px-6 py-4">Ayudan a conectar y dirigir datos</td>
+                                                <td class="px-6 py-4">Switch, router</td>
+                                            </tr>
+                                            <tr class="bg-gray-50">
+                                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Software</td>
+                                                <td class="px-6 py-4">Programas que permiten la comunicación</td>
+                                                <td class="px-6 py-4">Sistema operativo, navegador</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- 1.4 Clasificación de redes -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-semibold text-blue-800 mb-3">1.4. Clasificación de redes</h3>
+                                <div class="grid md:grid-cols-3 gap-6">
+                                    <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                                        <h4 class="font-semibold text-lg text-blue-700 mb-2">LAN</h4>
+                                        <p class="text-gray-700 mb-3">(Local Area Network): Red pequeña, como la de tu casa o salón de clases.</p>
+                                        <div class="text-sm text-gray-500">
+                                            <i class="fas fa-wifi mr-1"></i> Hasta 200m de alcance
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                                        <h4 class="font-semibold text-lg text-blue-700 mb-2">MAN</h4>
+                                        <p class="text-gray-700 mb-3">(Metropolitan Area Network): Red que conecta oficinas o universidades dentro de una ciudad.</p>
+                                        <div class="text-sm text-gray-500">
+                                            <i class="fas fa-city mr-1"></i> Hasta 50km de alcance
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                                        <h4 class="font-semibold text-lg text-blue-700 mb-2">WAN</h4>
+                                        <p class="text-gray-700 mb-3">(Wide Area Network): Red extensa que conecta redes más pequeñas a nivel mundial.</p>
+                                        <div class="text-sm text-gray-500">
+                                            <i class="fas fa-globe-americas mr-1"></i> Alcance mundial
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                    <p class="text-sm text-blue-700">"Las redes se clasifican según su tamaño y alcance geográfico" (Tanenbaum, 2011, p. 23).</p>
+                                </div>
+                            </div>
+
+                            <!-- 1.5 Tipos de conexión -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-semibold text-blue-800 mb-4">1.5. Tipos de conexión</h3>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                                        <div class="flex items-center mb-3">
+                                            <div class="p-2 bg-blue-100 rounded-full mr-3">
+                                                <i class="fas fa-ethernet text-blue-600"></i>
+                                            </div>
+                                            <h4 class="text-lg font-semibold">Alámbrica</h4>
+                                        </div>
+                                        <ul class="space-y-2 text-gray-700 pl-12">
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                                                <span>Usa cables</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                                                <span>Más rápida y estable</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                                                <span>Menos interferencias</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                                        <div class="flex items-center mb-3">
+                                            <div class="p-2 bg-green-100 rounded-full mr-3">
+                                                <i class="fas fa-wifi text-green-600"></i>
+                                            </div>
+                                            <h4 class="text-lg font-semibold">Inalámbrica</h4>
+                                        </div>
+                                        <ul class="space-y-2 text-gray-700 pl-12">
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                                                <span>Usa ondas de radio (Wi-Fi)</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                                                <span>Más cómoda y portátil</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                                                <span>Mayor flexibilidad de ubicación</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 1.6 Protocolos: el lenguaje de las redes -->
+                            <div class="mb-8 bg-blue-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-blue-800 mb-3">1.6. Protocolos: el lenguaje de las redes</h3>
+                                <p class="text-gray-700 mb-4">Para que los dispositivos se entiendan, deben hablar el mismo idioma. Ese "idioma" se llama protocolo. El más famoso es TCP/IP, que permite navegar por Internet.</p>
+                                <div class="bg-white p-4 border-l-4 border-blue-500 italic">
+                                    <p>"Los protocolos definen las reglas que rigen la comunicación entre dispositivos en una red" (Stallings, 2004, p. 29).</p>
+                                </div>
+                            </div>
+
+                            <!-- 1.7 Modelo OSI: la torre de la comunicación -->
+                            <div class="mb-8">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">1.7. Modelo OSI: la torre de la comunicación</h3>
+                                <p class="text-gray-700 mb-4">El modelo OSI (Open Systems Interconnection) es una forma de entender cómo viajan los datos de un dispositivo a otro. Tiene 7 capas, cada una con una función específica:</p>
+                                
+                                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm mb-6">
+                                    <div class="bg-blue-600 text-white px-6 py-3">
+                                        <h4 class="font-semibold">Modelo OSI - 7 Capas</h4>
+                                    </div>
+                                    <div class="divide-y divide-gray-200">
+                                        <div class="p-4 bg-blue-50">
+                                            <div class="font-semibold text-blue-800">7. Aplicación</div>
+                                            <p class="text-sm text-gray-600 mt-1">Programas como navegador o correo</p>
+                                        </div>
+                                        <div class="p-4">
+                                            <div class="font-semibold">6. Presentación</div>
+                                            <p class="text-sm text-gray-600 mt-1">Formato de los datos</p>
+                                        </div>
+                                        <div class="p-4 bg-blue-50">
+                                            <div class="font-semibold text-blue-800">5. Sesión</div>
+                                            <p class="text-sm text-gray-600 mt-1">Gestión de la conexión</p>
+                                        </div>
+                                        <div class="p-4">
+                                            <div class="font-semibold">4. Transporte</div>
+                                            <p class="text-sm text-gray-600 mt-1">TCP, control de flujo y errores</p>
+                                        </div>
+                                        <div class="p-4 bg-blue-50">
+                                            <div class="font-semibold text-blue-800">3. Red</div>
+                                            <p class="text-sm text-gray-600 mt-1">Direcciones IP, enrutamiento</p>
+                                        </div>
+                                        <div class="p-4">
+                                            <div class="font-semibold">2. Enlace de datos</div>
+                                            <p class="text-sm text-gray-600 mt-1">Direcciones MAC, detección de errores</p>
+                                        </div>
+                                        <div class="p-4 bg-blue-50">
+                                            <div class="font-semibold text-blue-800">1. Física</div>
+                                            <p class="text-sm text-gray-600 mt-1">Cables, señales, conectores</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                                    <p class="text-yellow-700">"El modelo OSI es una referencia conceptual para entender la arquitectura de red" (Tanenbaum, 2011, p. 41).</p>
+                                </div>
+                            </div>
+
+                            <!-- 1.8 Modelo TCP/IP: el modelo real -->
+                            <div class="mb-8">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">1.8. Modelo TCP/IP: el modelo real</h3>
+                                <p class="text-gray-700 mb-4">Es el modelo usado en Internet. Tiene 4 capas:</p>
+                                
+                                <div class="grid md:grid-cols-4 gap-6 mb-6">
+                                    <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
+                                        <div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                            <span class="text-green-600 font-bold">4</span>
+                                        </div>
+                                        <h4 class="font-semibold text-center mb-1">Aplicación</h4>
+                                        <p class="text-sm text-gray-600 text-center">(equivale a las capas 5, 6 y 7 del OSI)</p>
+                                        <p class="text-xs text-gray-500 text-center mt-2">correo, web, etc.</p>
+                                    </div>
+                                    
+                                    <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
+                                        <div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                            <span class="text-green-600 font-bold">3</span>
+                                        </div>
+                                        <h4 class="font-semibold text-center mb-1">Transporte</h4>
+                                        <p class="text-sm text-gray-600 text-center">(equivale a la capa 4 del OSI)</p>
+                                        <p class="text-xs text-gray-500 text-center mt-2">usa TCP o UDP</p>
+                                    </div>
+                                    
+                                    <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
+                                        <div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                            <span class="text-green-600 font-bold">2</span>
+                                        </div>
+                                        <h4 class="font-semibold text-center mb-1">Internet</h4>
+                                        <p class="text-sm text-gray-600 text-center">(equivale a la capa 3 del OSI)</p>
+                                        <p class="text-xs text-gray-500 text-center mt-2">usa IP</p>
+                                    </div>
+                                    
+                                    <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
+                                        <div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                            <span class="text-green-600 font-bold">1</span>
+                                        </div>
+                                        <h4 class="font-semibold text-center mb-1">Acceso a la red</h4>
+                                        <p class="text-sm text-gray-600 text-center">(equivale a las capas 1 y 2 del OSI)</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                    <p class="text-blue-700">"El modelo TCP/IP es la base de la comunicación en Internet y redes modernas" (Lowe, 2016, p. 249).</p>
+                                </div>
+                            </div>
+
+                            <!-- 1.9 Encapsulamiento de datos -->
+                            <div class="mb-8 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">1.9. Encapsulamiento de datos: el viaje de la información</h3>
+                                <p class="text-gray-700 mb-4">Cuando envías un mensaje, este pasa por varias capas. Cada capa añade su propia "envoltura" al mensaje. Es como enviar un regalo: lo pones en una caja (capa 4), la metes en otra (capa 3), y así sucesivamente hasta llegar al sobre (capa 1). Al llegar al destino, se abre capa por capa.</p>
+                                
+                                <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                                    <h4 class="font-semibold text-gray-800 mb-3">Ejemplo de encapsulamiento:</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <div class="w-8 text-gray-500">4</div>
+                                            <div class="flex-1 bg-blue-100 p-2 rounded">"Hola mundo"</div>
+                                            <div class="ml-2 text-sm text-gray-500">Datos</div>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <div class="w-8 text-gray-500">3</div>
+                                            <div class="flex-1 bg-green-100 p-2 rounded">[Cabecera TCP] + "Hola mundo"</div>
+                                            <div class="ml-2 text-sm text-gray-500">Segmento</div>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <div class="w-8 text-gray-500">2</div>
+                                            <div class="flex-1 bg-yellow-100 p-2 rounded">[Cabecera IP] + [TCP] + "Hola mundo"</div>
+                                            <div class="ml-2 text-sm text-gray-500">Paquete</div>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <div class="w-8 text-gray-500">1</div>
+                                            <div class="flex-1 bg-red-100 p-2 rounded">[Cabecera Ethernet] + [IP] + [TCP] + "Hola mundo" + [Tráiler]</div>
+                                            <div class="ml-2 text-sm text-gray-500">Trama</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p class="text-sm text-gray-600 italic">"El encapsulamiento permite que cada capa agregue información necesaria para el envío correcto de los datos" (Stallings, 2004, p. 36).</p>
+                            </div>
+
+                            <!-- 1.10 Ejemplo cotidiano -->
+                            <div class="mb-8 bg-blue-50 p-6 rounded-lg">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">1.10. Ejemplo cotidiano: red en una cafetería</h3>
+                                <p class="text-gray-700 mb-4">Una cafetería moderna puede tener:</p>
+                                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                                    <li>Un router que brinda Wi-Fi a clientes.</li>
+                                    <li>Una impresora compartida por el personal.</li>
+                                    <li>Una caja registradora conectada a Internet.</li>
+                                    <li>Una computadora que administra pedidos y menús.</li>
+                                </ul>
+                                <p class="mt-3 text-gray-700">Todo eso forma una red de computadoras.</p>
+                            </div>
+
+
+                        </div>
+
+                        <!-- Pestaña de Recursos -->
+                        <div id="recursos" class="tab-pane hidden">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">1.12. Recursos sugeridos</h2>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                                            <i class="fas fa-laptop-code text-blue-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-lg">Cisco Packet Tracer</h3>
+                                            <p class="text-sm text-gray-600 mb-2">Simulador de redes</p>
+                                            <p class="text-sm text-gray-700 mb-3">Herramienta esencial para simular y diseñar redes de computadoras de manera práctica.</p>
+                                            <a href="https://www.netacad.com/courses/packet-tracer" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                                <i class="fas fa-external-link-alt mr-1"></i> Visitar sitio web
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <div class="flex items-start">
+                                        <div class="bg-red-100 p-3 rounded-lg mr-4">
+                                            <i class="fab fa-youtube text-red-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-lg">Video educativo</h3>
+                                            <p class="text-sm text-gray-600 mb-2">YouTube</p>
+                                            <p class="text-sm text-gray-700 mb-3">"¿Qué es una red de computadoras?" - Explicación visual de conceptos fundamentales.</p>
+                                            <a href="https://www.youtube.com/watch?v=alkQaRYmMiA" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                                <i class="fas fa-play-circle mr-1"></i> Ver video
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <div class="flex items-start">
+                                        <div class="bg-green-100 p-3 rounded-lg mr-4">
+                                            <i class="fas fa-book text-green-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-lg">Computer Networks</h3>
+                                            <p class="text-sm text-gray-600 mb-2">Tanenbaum & Wetherall</p>
+                                            <p class="text-sm text-gray-700 mb-3">Libro de referencia con capítulos 1 y 2 sobre fundamentos de redes.</p>
+                                            <p class="text-xs text-gray-500">ISBN: 978-0132126953</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <div class="flex items-start">
+                                        <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+                                            <i class="fas fa-book text-yellow-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-lg">Networking For Dummies</h3>
+                                            <p class="text-sm text-gray-600 mb-2">Doug Lowe</p>
+                                            <p class="text-sm text-gray-700 mb-3">Guía introductoria con capítulos 1 y 3 sobre conceptos básicos de redes.</p>
+                                            <p class="text-xs text-gray-500">ISBN: 978-1119648505</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <div class="flex items-start">
+                                        <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                                            <i class="fas fa-book text-purple-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-lg">Comunicaciones y Redes</h3>
+                                            <p class="text-sm text-gray-600 mb-2">William Stallings</p>
+                                            <p class="text-sm text-gray-700 mb-3">Capítulo 2 sobre fundamentos de comunicaciones.</p>
+                                            <p class="text-xs text-gray-500">ISBN: 978-6073209147</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pestaña de Actividades -->
+                        <div id="actividades" class="tab-pane hidden">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">1.13. Actividades de aprendizaje</h2>
+                            
+                            <div class="space-y-6">
+                                <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
+                                    <h3 class="font-semibold text-lg text-gray-800 mb-2">1.13.1. Mapa conceptual de redes</h3>
+                                    <p class="text-gray-700 mb-3">Crea un mapa conceptual que relacione los conceptos clave vistos en la unidad: tipos de redes, dispositivos, modelos OSI/TCP-IP, protocolos y servicios de red.</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded">Individual</span>
+                                        <span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-0.5 rounded">5 puntos</span>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2.5 py-0.5 rounded">1 hora</span>
+                                    </div>
+                                </div>
+
+                                <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
+                                    <h3 class="font-semibold text-lg text-gray-800 mb-2">1.13.2. Análisis de red local</h3>
+                                    <p class="text-gray-700 mb-3">En equipos, identifiquen los dispositivos de red en su escuela u hogar. Hagan un diagrama que muestre cómo están conectados y qué tipo de red es.</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded">Equipos de 3</span>
+                                        <span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-0.5 rounded">10 puntos</span>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2.5 py-0.5 rounded">2 horas</span>
+                                    </div>
+                                </div>
+
+                                <div class="border-l-4 border-purple-500 bg-purple-50 p-4 rounded-r-lg">
+                                    <h3 class="font-semibold text-lg text-gray-800 mb-2">1.13.3. Simulación en Packet Tracer</h3>
+                                    <p class="text-gray-700 mb-3">Usando Cisco Packet Tracer, arma una red sencilla con 2 computadoras, un switch y un router. Verifica la conectividad entre dispositivos.</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded">Parejas</span>
+                                        <span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-0.5 rounded">15 puntos</span>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2.5 py-0.5 rounded">3 horas</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">Rúbrica de evaluación</h3>
+                                    
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-700 uppercase">Criterio</th>
+                                                    <th class="px-4 py-3 text-center text-sm font-medium text-gray-700 uppercase">Excelente (5)</th>
+                                                    <th class="px-4 py-3 text-center text-sm font-medium text-gray-700 uppercase">Suficiente (3-4)</th>
+                                                    <th class="px-4 py-3 text-center text-sm font-medium text-gray-700 uppercase">Insuficiente (1-2)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                <tr>
+                                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">Contenido técnico</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Conceptos precisos y completos</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Algunos errores menores</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Errores conceptuales graves</td>
+                                                </tr>
+                                                <tr class="bg-gray-50">
+                                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">Organización</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Estructura clara y lógica</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Buena pero mejorable</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Falta de organización</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">Creatividad</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Solución innovadora</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Algunos elementos creativos</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Falta de originalidad</td>
+                                                </tr>
+                                                <tr class="bg-gray-50">
+                                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">Presentación</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Profesional y clara</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Aceptable</td>
+                                                    <td class="px-4 py-3 text-sm text-gray-600 text-center">Poco clara</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                                    <h3 class="font-semibold text-lg text-gray-800 mb-2">1.13.4. Proyecto final: Diseño de red</h3>
+                                    <p class="text-gray-700 mb-3">Diseña la red para una pequeña empresa con 10 computadoras, 2 impresoras y acceso a Internet. Debes incluir:</p>
+                                    <ul class="list-disc pl-5 mb-3 text-gray-700 space-y-1">
+                                        <li>Diagrama de red</li>
+                                        <li>Lista de dispositivos necesarios</li>
+                                        <li>Justificación de tu diseño</li>
+                                        <li>Presupuesto estimado</li>
+                                    </ul>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded">Equipos de 4</span>
+                                        <span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-0.5 rounded">30 puntos</span>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2.5 py-0.5 rounded">1 semana</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                    <h3 class="font-semibold text-lg text-gray-800 mb-2">1.13.5. Autoevaluación</h3>
+                                    <p class="text-gray-700 mb-3">Responde en tu cuaderno:</p>
+                                    <ol class="list-decimal pl-5 space-y-2 text-gray-700">
+                                        <li>¿Qué es lo más importante que aprendí en esta unidad?</li>
+                                        <li>¿Qué tema me resultó más difícil de entender?</li>
+                                        <li>¿Cómo puedo aplicar estos conocimientos en mi vida diaria?</li>
+                                    </ol>
+                                    <p class="text-sm text-gray-500 mt-2">(Esta actividad no tiene calificación, es para reflexión personal)</p>
+                                </div>
+                                
+                                <!-- Pie de página para Actividades -->
+                                <div class="mt-8 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
+                                    © 2025 Escuela Superior Politécnica Agropecuaria de Manabí Manuel Félix López<br>
+                                    Carrera de Computación - Mgtr. Joffre Moreira Pico
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pestaña de Test de Práctica -->
+                        <div id="test" class="tab-pane hidden flex flex-col" style="min-height: 600px;">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-2xl font-bold text-gray-800">Test de Práctica - Unidad 1</h2>
+                                <button id="reload-test" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center px-3 py-1.5 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
+                                    <i class="fas fa-sync-alt mr-2"></i> Reiniciar Test
+                                </button>
+                            </div>
+                            
+                            <div class="flex-1 flex flex-col bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+                                <div class="border-b border-gray-200 bg-gray-50 px-4 py-2 flex justify-between items-center">
+                                    <span class="text-sm font-medium text-gray-600">Test de evaluación continua</span>
+                                    <div class="flex space-x-2">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Sin tiempo límite</span>
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Retroalimentación inmediata</span>
+                                    </div>
+                                </div>
+                                <div id="test-content" class="w-full min-h-[600px] bg-white rounded-b-lg overflow-auto p-4">
+                                    <div class="flex items-center justify-center h-full">
+                                        <div class="text-center">
+                                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                                            <p class="mt-4 text-gray-600">Cargando evaluación...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    function loadTestContent() {
+                                        console.log('Cargando contenido del test...');
+                                        const testContent = document.getElementById('test-content');
+                                        
+                                        // Mostrar indicador de carga
+                                        testContent.innerHTML = `
+                                            <div class="flex items-center justify-center h-full">
+                                                <div class="text-center">
+                                                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                                                    <p class="mt-4 text-gray-600">Cargando evaluación...</p>
+                                                    <p class="text-xs text-gray-500 mt-2">Si la carga tarda demasiado, asegúrate de usar un servidor web local.</p>
+                                                </div>
+                                            </div>`;
+                                        
+                                        // Verificar si estamos en un entorno local (file://)
+                                        if (window.location.protocol === 'file:') {
+                                            // Usar XMLHttpRequest para cargar el archivo local
+                                            const xhr = new XMLHttpRequest();
+                                            xhr.open('GET', 'TestUT1.html', true);
+                                            xhr.onreadystatechange = function() {
+                                                if (xhr.readyState === 4) {
+                                                    if (xhr.status === 0 || xhr.status === 200) {
+                                                        processTestContent(xhr.responseText);
+                                                    } else {
+                                                        showTestError('No se pudo cargar la evaluación. Por favor, usa un servidor web local.');
+                                                    }
+                                                }
+                                            };
+                                            xhr.send(null);
+                                            return;
+                                        }
+                                        
+                                        // Usar fetch si no estamos en un entorno local
+                                        fetch('TestUT1.html')
+                                            .then(response => {
+                                                if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                                                return response.text();
+                                            })
+                                            .then(html => processTestContent(html))
+                                            .catch(error => showTestError('Error al cargar la evaluación: ' + error.message));
+                                    }
+                                    
+                                    function processTestContent(html) {
+                                        console.log('Contenido del test cargado, procesando...');
+                                        const testContent = document.getElementById('test-content');
+                                        
+                                        try {
+                                            // Extraer solo el contenido del body
+                                            const parser = new DOMParser();
+                                            const doc = parser.parseFromString(html, 'text/html');
+                                            const content = doc.body.innerHTML;
+                                            
+                                            // Insertar el contenido en el contenedor
+                                            testContent.innerHTML = content;
+                                            
+                                            // Ejecutar cualquier script que venga en el contenido
+                                            const scripts = testContent.getElementsByTagName('script');
+                                            for (let i = 0; i < scripts.length; i++) {
+                                                const script = document.createElement('script');
+                                                if (scripts[i].src) {
+                                                    script.src = scripts[i].src;
+                                                } else {
+                                                    script.textContent = scripts[i].textContent;
+                                                }
+                                                document.body.appendChild(script).parentNode.removeChild(script);
+                                            }
+                                            
+                                            console.log('Contenido del test procesado correctamente');
+                                        } catch (error) {
+                                            console.error('Error al procesar el contenido:', error);
+                                            showTestError('Error al procesar el contenido de la evaluación: ' + error.message);
+                                        }
+                                    }
+                                    
+                                    function showTestError(message) {
+                                        console.error(message);
+                                        const testContent = document.getElementById('test-content');
+                                        testContent.innerHTML = `
+                                            <div class="bg-red-50 border-l-4 border-red-500 p-4">
+                                                <div class="flex">
+                                                    <div class="flex-shrink-0">
+                                                        <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </div>
+                                                    <div class="ml-3">
+                                                        <p class="text-sm text-red-700">
+                                                            ${message || 'No se pudo cargar la evaluación. Por favor, recarga la página o inténtalo de nuevo más tarde.'}
+                                                        </p>
+                                                        <p class="text-xs text-red-600 mt-2">
+                                                            <strong>Solución:</strong> Abre la página usando un servidor web local. Si usas VS Code, instala la extensión "Live Server" y haz clic derecho en el archivo > "Open with Live Server"
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                                    }
+                                    
+                                    // Cargar el contenido cuando el DOM esté listo
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        // Cargar cuando se muestre la pestaña
+                                        const testTab = document.querySelector('[data-tab="test"]');
+                                        if (testTab) {
+                                            testTab.addEventListener('click', loadTestContent);
+                                        }
+                                        
+                                        // Cargar también si ya está activa la pestaña
+                                        if (document.getElementById('test') && !document.getElementById('test').classList.contains('hidden')) {
+                                            loadTestContent();
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            
+                            <style>
+                                /* Asegura que el iframe herede los estilos de fuente */
+                                #test-iframe {
+                                    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                                    min-height: 600px;
+                                }
+                                /* Estilo para el botón de reinicio */
+                                #reload-test:hover {
+                                    transform: rotate(180deg);
+                                    transition: transform 0.3s ease, background-color 0.2s ease;
+                                }
+                                /* Asegura que el contenedor principal ocupe todo el espacio disponible */
+                                #contenido-unidad {
+                                    display: flex;
+                                    flex-direction: column;
+                                    height: 100%;
+                                }
+                                .tab-pane {
+                                    flex: 1;
+                                    display: flex;
+                                    flex-direction: column;
+                                    min-height: 0; /* Permite que el contenedor se encoja */
+                                }
+                            </style>
+                            
+                            <script>
+                                // Script para manejar el reinicio del test
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const reloadBtn = document.getElementById('reload-test');
+                                    const testIframe = document.getElementById('test-iframe');
+                                    
+                                    reloadBtn.addEventListener('click', function() {
+                                        if (confirm('¿Estás seguro de que deseas reiniciar el test? Se perderán todas tus respuestas.')) {
+                                            testIframe.contentWindow.location.reload();
+                                        }
+                                    });
+                                });
+                            </script>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -124,7 +827,34 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="script.js"></script>
-    <script src="menu.js"></script>
+    <script>
+        // Asegurarse de que el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar scripts en orden
+            const scripts = [
+                'script.js',
+                'menu.js',
+                'js/tabs.js'
+            ];
+            
+            function loadScript(src, callback) {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => callback();
+                script.onerror = () => console.error('Error al cargar el script: ' + src);
+                document.body.appendChild(script);
+            }
+            
+            // Cargar scripts en secuencia
+            let i = 0;
+            function loadNextScript() {
+                if (i < scripts.length) {
+                    loadScript(scripts[i++], loadNextScript);
+                }
+            }
+            
+            loadNextScript();
+        });
+    </script>
 </body>
 </html>

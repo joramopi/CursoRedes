@@ -173,6 +173,69 @@ body {
     margin-bottom: 2rem;
 }
 
+/* Estilos para el reproductor de video */
+#video-section {
+    display: none; /* Ocultar por defecto */
+    width: 100%;
+    margin: 2rem 0;
+}
+
+#video-section:not(.hidden) {
+    display: block;
+}
+
+#video-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#video-container iframe {
+    width: 100%;
+    min-height: 450px;
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para móviles */
+@media (max-width: 640px) {
+    #video-container {
+        padding: 0.5rem;
+    }
+    
+    #video-container iframe {
+        min-height: 250px;
+    }
+}
+
+#back-to-home {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+#back-to-home:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+#back-to-home i {
+    margin-right: 8px;
+}
+
 /* Estilos para los botones */
 .btn {
     display: inline-flex;
