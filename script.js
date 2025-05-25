@@ -7,99 +7,7 @@ const bookData = {
             descripcion: 'Conceptos básicos, clasificación de redes, modelos de referencia OSI y TCP/IP, encapsulamiento de datos.',
             duracion: '6-8 horas',
             disponible: true,
-            contenido: `
-                <div class="unit-content-section">
-                    <h2 class="text-2xl font-bold mb-6 text-blue-900">Introducción a las Redes de Computadoras</h2>
-                    
-                    <div class="mb-8">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">¿Qué son las redes de computadoras?</h3>
-                        <p class="text-gray-700 mb-4">Una red de computadoras es un conjunto de dispositivos interconectados que comparten recursos e información a través de medios de transmisión físicos o inalámbricos.</p>
-                        
-                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
-                            <h4 class="font-semibold text-blue-800 mb-2">Objetivos principales</h4>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-700">
-                                <li>Compartir recursos (impresoras, archivos, aplicaciones)</li>
-                                <li>Facilitar la comunicación entre usuarios</li>
-                                <li>Compartir información de forma rápida y eficiente</li>
-                                <li>Acceso remoto a sistemas y servicios</li>
-                                <li>Reducción de costos mediante el uso compartido</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 gap-6 mb-8">
-                        <div class="bg-white p-6 rounded-lg border border-gray-200">
-                            <h3 class="text-lg font-semibold mb-3 text-blue-800">Componentes básicos</h3>
-                            <ul class="space-y-2">
-                                <li class="flex items-start">
-                                    <i class="fas fa-desktop text-blue-500 mt-1 mr-2"></i>
-                                    <span>Dispositivos finales (PCs, servidores, impresoras)</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-network-wired text-blue-500 mt-1 mr-2"></i>
-                                    <span>Dispositivos de red (routers, switches, hubs)</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-plug text-blue-500 mt-1 mr-2"></i>
-                                    <span>Medios de transmisión (cableado, inalámbrico)</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-broadcast-tower text-blue-500 mt-1 mr-2"></i>
-                                    <span>Protocolos de comunicación</span>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div class="bg-white p-6 rounded-lg border border-gray-200">
-                            <h3 class="text-lg font-semibold mb-3 text-blue-800">Ventajas de las redes</h3>
-                            <ul class="space-y-2">
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                    <span>Comunicación rápida y eficiente</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                    <span>Uso compartido de recursos</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                    <span>Acceso a información remota</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                    <span>Colaboración entre usuarios</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                    <span>Reducción de costos</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r mb-8">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-lightbulb text-yellow-500 text-xl"></i>
-                            </div>
-                            <div class="ml-3">
-                                <h4 class="text-yellow-800 font-medium">Dato interesante</h4>
-                                <p class="text-yellow-700 text-sm mt-1">La primera red de computadoras, ARPANET, se creó en 1969 y es considerada la precursora de Internet moderno.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center mt-8 pt-4 border-t border-gray-200">
-                        <button class="btn btn-outline flex items-center">
-                            <i class="fas fa-arrow-left mr-2"></i> Anterior
-                        </button>
-                        <div class="text-sm text-gray-500">1 de 6</div>
-                        <button class="btn btn-primary flex items-center">
-                            Siguiente <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
-                </div>
-            `
+            contenido: ''
         },
         // ... (más unidades)
     ]
@@ -118,6 +26,44 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Iniciar animación de la barra de progreso
     startProgressAnimation();
+    
+    // Configurar evento para el botón de inicio del menú
+    document.getElementById('menu-inicio')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadHomePage();
+    });
+
+    // Mostrar/ocultar submenú de unidades
+    document.getElementById('menu-unidades')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const submenu = document.getElementById('submenu-unidades');
+        submenu.classList.toggle('hidden');
+        
+        // Cerrar otros submenús si están abiertos
+        document.querySelectorAll('#submenu-unidades').forEach(menu => {
+            if (menu !== submenu) {
+                menu.classList.add('hidden');
+            }
+        });
+    });
+
+    // Cerrar menús al hacer clic fuera de ellos
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#menu-unidades') && !e.target.closest('#submenu-unidades')) {
+            document.getElementById('submenu-unidades')?.classList.add('hidden');
+        }
+    });
+
+    // Manejar clic en las unidades del submenú
+    document.querySelectorAll('.unidad-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const unidadIndex = parseInt(item.dataset.unidad);
+            loadUnit(unidadIndex);
+            // Ocultar el submenú después de seleccionar una unidad
+            document.getElementById('submenu-unidades')?.classList.add('hidden');
+        });
+    });
 });
 
 // Cargar la página de inicio
@@ -144,7 +90,7 @@ function loadHomePage() {
         <!-- Welcome Section -->
         <div class="bg-white rounded-xl shadow-md p-6 mb-8">
             <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-2/3 mb-6 md:mb-0 md:pr-6">
+                <div class="w-full mb-6 md:mb-0">
                     <h2 class="text-2xl font-semibold mb-4 text-blue-900">¡Bienvenido al Libro Digital Interactivo!</h2>
                     <p class="text-gray-600 mb-4">
                         Esta guía está diseñada como un material de apoyo estructurado para la asignatura Redes de Computadoras, perteneciente a la Carrera de Computación de la ESPAM MFL. Tiene como propósito facilitar el aprendizaje autónomo y acompañado, integrando principios teóricos, ejemplos contextualizados, actividades prácticas y el uso de simuladores.
@@ -157,16 +103,32 @@ function loadHomePage() {
                             <i class="fas fa-play-circle mr-2"></i>
                             Comenzar recorrido
                         </button>
-                        <button class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center">
+                        <a href="informacion.html" class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center">
                             <i class="fas fa-info-circle mr-2"></i>
                             Más información
-                        </button>
+                        </a>
                     </div>
                 </div>
-                <div class="md:w-1/3 flex justify-center">
-                    <div class="bg-blue-100 p-6 rounded-lg">
-                        <i class="fas fa-network-wired text-8xl text-blue-600"></i>
-                    </div>
+            </div>
+            
+            <!-- Sección del video (inicialmente oculta) -->
+            <div id="video-section" class="hidden mt-8">
+                <div class="aspect-w-16 aspect-h-9 w-full max-w-4xl mx-auto">
+                    <iframe 
+                        id="youtube-video"
+                        class="w-full h-96 rounded-lg shadow-lg"
+                        src=""
+                        title="Video de introducción a Redes de Computadoras"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="mt-4 text-center">
+                    <button id="back-to-home" class="text-blue-600 hover:text-blue-800 font-medium flex items-center mx-auto">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Volver al inicio
+                    </button>
                 </div>
             </div>
         </div>
@@ -175,8 +137,8 @@ function loadHomePage() {
         <div class="bg-white rounded-xl shadow-md p-6 mb-8">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/4 flex justify-center mb-6 md:mb-0">
-                    <div class="rounded-full w-40 h-40 overflow-hidden bg-gray-200 flex items-center justify-center avatar">
-                        <i class="fas fa-user-tie text-6xl text-gray-400"></i>
+                    <div class="rounded-full w-40 h-40 overflow-hidden bg-gray-200 flex items-center justify-center avatar border-4 border-blue-100">
+                        <img src="images/FotoDocente.jpg" alt="Mgtr. Joffre Moreira Pico" class="w-full h-full object-cover">
                     </div>
                 </div>
                 <div class="md:w-3/4 md:pl-6">
@@ -344,3 +306,119 @@ function showNotification(message, type = 'info') {
         }, 500);
     }, 3000);
 }
+
+// Función para mostrar el video de YouTube
+function showVideo() {
+    const mainContent = document.getElementById('main-content');
+    
+    if (mainContent) {
+        mainContent.innerHTML = `
+            <!-- Header -->
+            <div class="flex flex-col lg:flex-row justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2 lg:mb-0">Redes de Computadoras</h1>
+                <div class="flex items-center">
+                    <div class="mr-6">
+                        <span class="text-sm text-gray-600">Tu progreso:</span>
+                        <div class="progress-bar mt-1">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-lg">
+                        <i class="fas fa-user text-blue-900"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección del video -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="aspect-w-16 aspect-h-9 w-full max-w-4xl mx-auto">
+                    <iframe 
+                        id="youtube-video"
+                        class="w-full h-96 rounded-lg shadow-lg"
+                        src="https://www.youtube.com/embed/alkQaRYmMiA?autoplay=1"
+                        title="Video de introducción a Redes de Computadoras"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="mt-6 text-center">
+                    <button id="back-to-home" class="inline-flex items-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Volver al menú principal
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Desplazarse al inicio de la página
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Función para volver a la página de inicio
+function backToHome() {
+    // Recargar la página para volver al estado inicial
+    window.location.href = 'index.html';
+}
+
+// Configurar eventos después de cargar el DOM
+document.addEventListener('DOMContentLoaded', () => {
+    // Cargar la página de inicio
+    loadHomePage();
+    
+    // Configurar eventos de navegación
+    setupNavigation();
+    
+    // Iniciar animación de la barra de progreso
+    startProgressAnimation();
+    
+    // Configurar evento para el botón de inicio del menú
+    document.getElementById('menu-inicio')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadHomePage();
+    });
+
+    // Mostrar/ocultar submenú de unidades
+    document.getElementById('menu-unidades')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const submenu = document.getElementById('submenu-unidades');
+        submenu.classList.toggle('hidden');
+        
+        // Cerrar otros submenús si están abiertos
+        document.querySelectorAll('#submenu-unidades').forEach(menu => {
+            if (menu !== submenu) {
+                menu.classList.add('hidden');
+            }
+        });
+    });
+
+    // Cerrar menús al hacer clic fuera de ellos
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#menu-unidades') && !e.target.closest('#submenu-unidades')) {
+            document.getElementById('submenu-unidades')?.classList.add('hidden');
+        }
+    });
+
+    // Manejar clic en las unidades del submenú
+    document.querySelectorAll('.unidad-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const unidadIndex = parseInt(item.dataset.unidad);
+            loadUnit(unidadIndex);
+            // Ocultar el submenú después de seleccionar una unidad
+            document.getElementById('submenu-unidades')?.classList.add('hidden');
+        });
+    });
+    
+    // Configurar evento para el botón de comenzar recorrido
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#start-journey')) {
+            e.preventDefault();
+            showVideo();
+        } else if (e.target.closest('#back-to-home')) {
+            e.preventDefault();
+            backToHome();
+        }
+    });
+});

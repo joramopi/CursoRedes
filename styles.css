@@ -30,6 +30,53 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilos para el submenú de unidades */
+#submenu-unidades {
+    transition: all 0.3s ease-in-out;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#submenu-unidades:not(.hidden) {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animación de rotación para el ícono de flecha */
+.rotate-180 {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Transición suave para el menú desplegable */
+#submenu-unidades a {
+    transition: all 0.2s ease;
+}
+
+#submenu-unidades a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding-left: 1.25rem;
+}
+
+/* Estilos para los ítems del submenú */
+.unidad-item {
+    transition: all 0.2s;
+    display: block;
+}
+
+.unidad-item:hover {
+    transform: translateX(5px);
+}
+
+/* Asegurar que el menú se muestre sobre otros elementos */
+.sidebar {
+    position: relative;
+    z-index: 10;
+}
+
 /* Estilos para las tarjetas de unidades */
 .unit-card {
     background-size: cover;

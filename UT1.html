@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redes de Computadoras - Libro Digital Interactivo</title>
+    <title>UT1 - Introducción a las Redes de Computadoras</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="bg-gray-50">
     <div class="flex flex-col lg:flex-row">
         <!-- Sidebar Navigation -->
         <div class="sidebar w-full lg:w-64 text-white p-4">
@@ -22,12 +22,12 @@
             
             <nav>
                 <div class="mb-4 text-sm text-gray-400 uppercase tracking-wider pl-4">Principal</div>
-                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1 bg-blue-700" id="menu-inicio">
+                <a href="index.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
                     <i class="fas fa-home mr-3"></i>
                     <span>Inicio</span>
                 </a>
                 <div class="relative">
-                    <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1" id="menu-unidades">
+                    <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1 bg-blue-700" id="menu-unidades">
                         <i class="fas fa-book mr-3"></i>
                         <span>Unidades</span>
                         <i class="fas fa-chevron-down ml-auto text-sm"></i>
@@ -71,16 +71,50 @@
         </div>
 
         <!-- Main Content Area -->
-        <div class="flex-1 p-4 lg:p-10" id="main-content">
-            <!-- El contenido dinámico se cargará aquí -->
+        <div class="flex-1 p-4 lg:p-10">
+            <div class="max-w-6xl mx-auto">
+                <!-- Contenido de la Unidad Temática 1 -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                    <h1 class="text-3xl font-bold text-blue-900 mb-6">Unidad 1: Introducción a las Redes de Computadoras</h1>
+                    
+                    <!-- Sección de información de la unidad -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-500 text-xl"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-medium text-blue-800">Información de la Unidad</h3>
+                                <div class="mt-2 text-sm text-blue-700">
+                                    <p><span class="font-semibold">Duración estimada:</span> 6-8 horas</p>
+                                    <p><span class="font-semibold">Temas principales:</span> Conceptos básicos, modelos de referencia, protocolos</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contenido de la unidad (se llenará con la información que proporciones) -->
+                    <div id="contenido-unidad" class="prose max-w-none">
+                        <!-- El contenido de la unidad se cargará aquí -->
+                    </div>
+
+                    <!-- Navegación entre secciones -->
+                    <div class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center">
+                        <button class="btn btn-outline flex items-center opacity-50 cursor-not-allowed">
+                            <i class="fas fa-arrow-left mr-2"></i> Anterior
+                        </button>
+                        <div class="text-sm text-gray-500">Sección 1 de 1</div>
+                        <button class="btn btn-primary flex items-center">
+                            Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <script src="script.js"></script>
-    <script src="menu.js"></script>
-    
+
     <!-- Footer -->
-    <footer class="bg-gray-50 border-t border-gray-200 mt-8">
+    <footer class="bg-gray-50 border-t border-gray-200">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <p class="text-center text-gray-500 text-sm">
                 © 2025 Escuela Superior Politécnica Agropecuaria de Manabí Manuel Félix López<br>
@@ -88,5 +122,9 @@
             </p>
         </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="menu.js"></script>
 </body>
 </html>
