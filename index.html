@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redes de Computadoras - Libro Digital Interactivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-['Poppins'] bg-gray-100">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar w-full lg:w-64 text-white p-4">
+            <div class="flex items-center justify-center lg:justify-start mb-8 pt-2">
+                <div class="bg-white p-2 rounded-full">
+                    <i class="fas fa-network-wired text-2xl text-blue-900"></i>
+                </div>
+                <h1 class="text-xl ml-3 font-bold">CC-0601</h1>
+            </div>
+            
+            <nav>
+                <div class="mb-4 text-sm text-gray-400 uppercase tracking-wider pl-4">Principal</div>
+                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1 bg-blue-700">
+                    <i class="fas fa-home mr-3"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-book mr-3"></i>
+                    <span>Unidades</span>
+                </a>
+                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-graduation-cap mr-3"></i>
+                    <span>Evaluación</span>
+                </a>
+                
+                <div class="mb-4 mt-6 text-sm text-gray-400 uppercase tracking-wider pl-4">Recursos</div>
+                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-list-alt mr-3"></i>
+                    <span>Glosario</span>
+                </a>
+                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-file-download mr-3"></i>
+                    <span>Material de Apoyo</span>
+                </a>
+                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-edit mr-3"></i>
+                    <span>Cuaderno</span>
+                </a>
+                
+                <div class="mb-4 mt-6 text-sm text-gray-400 uppercase tracking-wider pl-4">Asistencia IA</div>
+                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-robot mr-3"></i>
+                    <span>Asistente de Redes</span>
+                </a>
+                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-comment-dots mr-3"></i>
+                    <span>Consultar Dudas</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 p-4 lg:p-8">
+            <!-- Header -->
+            <div class="flex flex-col lg:flex-row justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2 lg:mb-0">
+                    Libro Digital Interactivo - Redes de Computadoras
+                </h1>
+                <div class="flex items-center">
+                    <div class="mr-6">
+                        <span class="text-sm text-gray-600">Tu progreso:</span>
+                        <div class="progress-bar mt-1">
+                            <div class="progress-fill animate-progress"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-lg">
+                        <i class="fas fa-user text-blue-900"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Content -->
+            <div class="flex flex-col lg:flex-row gap-6">
+                <!-- Left Sidebar - Topics -->
+                <div class="w-full lg:w-1/3 bg-white rounded-xl shadow-md p-6 h-fit">
+                    <h2 class="text-xl font-bold mb-4 text-blue-900 border-b pb-2">Temas del Libro</h2>
+                    <div class="space-y-2" id="topics-list">
+                        <!-- Topics will be loaded by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Right Content -->
+                <div class="flex-1 bg-white rounded-xl shadow-md p-6" id="content-display">
+                    <div id="welcome-content">
+                        <h2 class="text-2xl font-bold mb-4 text-blue-900">Bienvenido al Libro Digital Interactivo</h2>
+                        <p class="mb-4 text-gray-700">
+                            Esta guía está diseñada como un material de apoyo estructurado para la asignatura Redes de Computadoras, 
+                            perteneciente a la Carrera de Computación de la ESPAM MFL. Tiene como propósito facilitar el aprendizaje 
+                            autónomo y acompañado, integrando principios teóricos, ejemplos contextualizados, actividades prácticas 
+                            y el uso de simuladores.
+                        </p>
+                        <p class="mb-6 text-gray-700">
+                            El enfoque es práctico-profesionalizante, alineado al perfil de egreso del ingeniero en Computación, 
+                            e incorpora metodologías activas como el Aprendizaje Basado en Problemas (ABP), clase invertida y talleres 
+                            con Cisco Packet Tracer.
+                        </p>
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <h3 class="font-semibold text-blue-800 mb-2">Instrucciones:</h3>
+                            <ol class="list-decimal list-inside space-y-1 text-gray-700">
+                                <li>Selecciona un tema del menú de la izquierda para comenzar</li>
+                                <li>Navega entre las secciones usando los botones de navegación</li>
+                                <li>Explora los recursos adicionales en cada tema</li>
+                                <li>Realiza las actividades prácticas propuestas</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="topic-content" class="hidden">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="mt-6 flex justify-between">
+                <button id="prev-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Anterior
+                </button>
+                <button id="next-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                    Siguiente
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-16 border-t border-gray-200 pt-8 pb-4">
+                <div class="text-center text-gray-500 text-sm">
+                    <p>© 2023 Escuela Superior Politécnica Agropecuaria de Manabí Manuel Félix López</p>
+                    <p>Carrera de Computación - Grupo de Investigación SISCOM</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
