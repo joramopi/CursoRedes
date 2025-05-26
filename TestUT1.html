@@ -4,33 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluación Interactiva - Unidad 1</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Transiciones de Vue */
         .fade-enter-active, .fade-leave-active {
-            transition: opacity 0.3s;
+            transition: opacity 0.3s ease;
         }
-        .fade-enter, .fade-leave-to {
+        .fade-enter-from, .fade-leave-to {
             opacity: 0;
         }
-        .option-selected {
-            border: 2px solid #3b82f6;
-            background-color: #dbeafe;
-        }
-        .correct-answer {
-            border: 2px solid #10b981;
-            background-color: #d1fae5;
-        }
-        .wrong-answer {
-            border: 2px solid #ef4444;
-            background-color: #fee2e2;
+        /* Estilos para ocultar visualmente pero mantener accesible */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
         }
     </style>
 </head>
 <body class="bg-gray-50">
-    <div id="app" class="flex flex-col lg:flex-row">
+    <div id="app" class="flex flex-col lg:flex-row min-h-screen">
         <!-- Sidebar Navigation -->
-        <div class="sidebar w-full lg:w-64 text-white p-4 bg-blue-900">
+        <div class="sidebar w-full lg:w-64 text-white p-4 bg-blue-900 flex-shrink-0">
             <div class="flex items-center justify-center lg:justify-start mb-8 pt-2">
                 <div class="bg-white p-2 rounded-full">
                     <i class="fas fa-network-wired text-2xl text-blue-900"></i>
@@ -64,6 +67,19 @@
                         Test Unidad 4
                     </a>
                 </div>
+
+                <!-- Opciones de Quiz (Solo para depuración o configuración) -->
+                <div class="mt-8 pt-4 border-t border-blue-800">
+                    <div class="text-sm text-gray-400 mb-2">Configuración del Quiz:</div>
+                    <label class="flex items-center text-gray-300 py-2 px-4 text-sm mb-1">
+                        <input type="checkbox" v-model="randomizeQuestions" class="h-4 w-4 text-blue-600 rounded border-gray-300 mr-2">
+                        <span>Preguntas aleatorias</span>
+                    </label>
+                    <label class="flex items-center text-gray-300 py-2 px-4 text-sm mb-1">
+                        <input type="checkbox" v-model="randomizeOptions" class="h-4 w-4 text-blue-600 rounded border-gray-300 mr-2">
+                        <span>Opciones aleatorias</span>
+                    </label>
+                </div>
             </nav>
         </div>
         
@@ -78,21 +94,30 @@
                     <!-- Progress Bar -->
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
                         <div class="bg-blue-400 h-2.5 rounded-full transition-all duration-300" 
-                             :style="{width: ((currentQuestionIndex + 1) / questions.length * 100) + '%'}"></div>
+                             :style="{width: ((currentQuestionIndex + 1) / displayedQuestions.length * 100) + '%'}"></div>
                     </div>
                     <div class="flex justify-between text-sm mt-2">
-                        <span>Pregunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}</span>
-                        <span>{{ Math.round(((currentQuestionIndex + 1) / questions.length) * 100) }}% Completado</span>
+                        <span>Pregunta {{ currentQuestionIndex + 1 }} de {{ displayedQuestions.length }}</span>
+                        <span>{{ Math.round(((currentQuestionIndex + 1) / displayedQuestions.length) * 100) }}% Completado</span>
+                        <span class="font-bold">Tiempo: {{ formatTime(elapsedTime) }}</span>
                     </div>
                 </div>
             </header>
 
-                <!-- Main Content -->
-                <main class="container mx-auto px-4 py-8">
-                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <!-- Question -->
-                        <div v-if="!quizCompleted" class="question-container">
+            <!-- Main Content -->
+            <main class="container mx-auto px-4 py-8 flex-grow">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <!-- Pregunta actual del quiz -->
+                    <transition name="fade" mode="out-in">
+                        <!-- ¡IMPORTANTE! Añadido `&& currentQuestion` aquí para evitar el TypeError al cargar -->
+                        <div v-if="!quizCompleted && currentQuestion" :key="currentQuestionIndex" class="question-container">
                             <h2 class="text-xl font-semibold mb-6">{{ currentQuestion.question }}</h2>
+                            <p class="text-gray-600 text-sm mb-4">
+                                <span v-if="currentQuestion.type === 'choice' && currentQuestion.multiple">Selecciona una o más opciones correctas.</span>
+                                <span v-else-if="currentQuestion.type === 'choice'">Selecciona la opción correcta.</span>
+                                <span v-else-if="currentQuestion.type === 'truefalse'">Selecciona Verdadero o Falso.</span>
+                                <span v-else-if="currentQuestion.type === 'matching'">Relaciona cada término con su función principal.</span>
+                            </p>
                     
                             <!-- Multiple Choice -->
                             <div v-if="currentQuestion.type === 'choice'" class="space-y-3">
@@ -105,6 +130,7 @@
                                             <input type="checkbox" 
                                                 :checked="isOptionSelected(option, index)"
                                                 @change="toggleOption(option, $event)"
+                                                :disabled="quizSubmitted"
                                                 class="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
                                             <span class="ml-3">{{ option.text }}</span>
                                         </div>
@@ -114,6 +140,7 @@
                                                 :checked="isOptionSelected(option, index)"
                                                 @change="selectSingleOption(option, $event)"
                                                 :name="'question-' + currentQuestionIndex"
+                                                :disabled="quizSubmitted"
                                                 class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
                                             <span class="ml-3">{{ option.text }}</span>
                                         </div>
@@ -122,24 +149,32 @@
                             </div>
 
                             <!-- True/False -->
-                            <div v-else-if="currentQuestion.type === 'truefalse'" class="space-y-3">
+                            <div v-else-if="currentQuestion.type === 'truefalse'" class="space-y-3" role="radiogroup" :aria-labelledby="'question-' + currentQuestionIndex + '-title'">
+                                <span :id="'question-' + currentQuestionIndex + '-title'" class="sr-only">{{ currentQuestion.question }}</span>
                                 <div v-for="option in ['Verdadero', 'Falso']" :key="option"
                                     @click="selectSingleOption(option)"
                                     class="p-4 border rounded-lg cursor-pointer transition-colors"
-                                    :class="getOptionClass(option)">
+                                    :class="getOptionClass(option)"
+                                    :aria-checked="isOptionSelected(option) ? 'true' : 'false'"
+                                    :aria-disabled="quizSubmitted ? 'true' : 'false'"
+                                    role="radio">
                                     <div class="flex items-center">
                                         <div class="w-6 h-6 rounded-full border flex items-center justify-center mr-3 flex-shrink-0"
                                             :class="{
-                                                'border-green-500': isOptionSelected(option) && isOptionCorrect(option),
-                                                'border-red-500': isOptionSelected(option) && !isOptionCorrect(option),
-                                                'border-gray-300': !isOptionSelected(option)
+                                                'border-green-500': quizSubmitted && isOptionCorrect(option),
+                                                'border-red-500': quizSubmitted && isOptionSelected(option) && !isOptionCorrect(option),
+                                                'border-blue-300': !quizSubmitted && isOptionSelected(option), 
+                                                'border-gray-300': !isOptionSelected(option) && !quizSubmitted 
                                             }">
                                             <div v-if="isOptionSelected(option)" 
                                                 class="w-3 h-3 rounded-full"
                                                 :class="{
-                                                    'bg-green-500': isOptionCorrect(option),
-                                                    'bg-red-500': !isOptionCorrect(option)
+                                                    'bg-green-500': quizSubmitted && isOptionCorrect(option),
+                                                    'bg-red-500': quizSubmitted && !isOptionCorrect(option),
+                                                    'bg-blue-500': !quizSubmitted 
                                                 }"></div>
+                                            <div v-else-if="quizSubmitted && isOptionCorrect(option)" 
+                                                 class="w-3 h-3 rounded-full bg-green-500"></div>
                                         </div>
                                         <span>{{ option }}</span>
                                     </div>
@@ -151,8 +186,14 @@
                                 <div v-for="(item, index) in currentQuestion.items" :key="index" class="flex items-center">
                                     <span class="w-1/3 font-medium">{{ item.term }}</span>
                                     <select v-model="userAnswers[currentQuestionIndex][index]" 
+                                            @change="checkAnswer"
                                             class="flex-1 ml-4 p-2 border rounded"
-                                            :class="{'bg-green-50 border-green-500': isMatchingCorrect(index)}"
+                                            :class="{
+                                                'bg-green-50 border-green-500': quizSubmitted && isMatchingCorrect(index),
+                                                'bg-red-50 border-red-500': quizSubmitted && !isMatchingCorrect(index) && userAnswers[currentQuestionIndex][index],
+                                                'bg-blue-50 border-blue-300': !quizSubmitted && userAnswers[currentQuestionIndex][index] !== '' && userAnswers[currentQuestionIndex][index] !== undefined, 
+                                                'border-gray-300': !userAnswers[currentQuestionIndex][index] 
+                                            }"
                                             :disabled="quizSubmitted">
                                         <option value="">Selecciona una opción</option>
                                         <option v-for="(option, optIndex) in currentQuestion.options" 
@@ -165,431 +206,495 @@
                                 </div>
                             </div>
 
-                    <!-- Feedback -->
-                    <div v-if="showFeedback" class="mt-6 p-4 rounded-lg" 
-                         :class="isAnswerCorrect ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'">
-                        <p class="font-medium">
-                            <i :class="isAnswerCorrect ? 'fas fa-check-circle' : 'fas fa-times-circle'" class="mr-2"></i>
-                            {{ isAnswerCorrect ? '¡Correcto!' : 'Incorrecto' }}
-                        </p>
-                        <p class="mt-2" v-html="currentQuestion.explanation"></p>
-                    </div>
-
-                    <!-- Navigation Buttons -->
-                    <div class="flex justify-between mt-8">
-                        <button @click="previousQuestion" 
-                                :disabled="currentQuestionIndex === 0"
-                                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50">
-                            <i class="fas fa-arrow-left mr-2"></i>Anterior
-                        </button>
-                        
-                        <button v-if="!isLastQuestion" 
-                                @click="nextQuestion" 
-                                :disabled="!isAnswerSelected"
-                                class="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50">
-                            Siguiente<i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-
-                        <button v-else 
-                                @click="submitQuiz" 
-                                :disabled="!isAnswerSelected"
-                                class="px-6 py-2 bg-green-600 text-white rounded-lg disabled:opacity-50">
-                            Finalizar<i class="fas fa-check ml-2"></i>
-                        </button>
-                    </div>
+                        <!-- Feedback -->
+                        <div v-if="showFeedback" class="mt-6 p-4 rounded-lg" 
+                             :class="isAnswerCorrect ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'"
+                             role="status" aria-live="polite">
+                            <p class="font-medium">
+                                <i :class="isAnswerCorrect ? 'fas fa-check-circle' : 'fas fa-times-circle'" class="mr-2"></i>
+                                {{ isAnswerCorrect ? '¡Correcto!' : 'Incorrecto' }}
+                            </p>
+                            <p class="mt-2" v-html="currentQuestion.explanation"></p>
                         </div>
 
-                        <!-- Results -->
-                        <div v-else class="text-center py-8">
-                            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fas fa-trophy text-4xl text-yellow-500"></i>
-                            </div>
-                            <h2 class="text-2xl font-bold mb-2">¡Evaluación Completada!</h2>
-                            <p class="text-gray-600 mb-6">Has completado la evaluación de la Unidad 1</p>
+                        <!-- Navigation Buttons -->
+                        <div class="flex justify-between mt-8">
+                            <button @click="previousQuestion" 
+                                    :disabled="currentQuestionIndex === 0"
+                                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50"
+                                    aria-label="Pregunta anterior">
+                                <i class="fas fa-arrow-left mr-2"></i>Anterior
+                            </button>
                             
-                            <div class="bg-blue-50 p-6 rounded-lg max-w-md mx-auto mb-8">
-                                <div class="text-4xl font-bold text-blue-600 mb-2">{{ score }}%</div>
-                                <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
-                                    <div class="bg-blue-600 h-4 rounded-full" 
-                                        :style="{width: score + '%'}"></div>
-                                </div>
-                                <p class="text-sm text-gray-600">
-                                    {{ correctAnswers }} de {{ questions.length }} respuestas correctas
-                                </p>
-                            </div>
+                            <!-- Botón "Verificar Respuesta" para preguntas de selección múltiple -->
+                            <button v-if="currentQuestion.type === 'choice' && currentQuestion.multiple && !quizSubmitted"
+                                    @click="checkAnswer" 
+                                    :disabled="!isAnswerSelected"
+                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700 transition-colors"
+                                    aria-label="Verificar mi respuesta">
+                                Verificar Respuesta<i class="fas fa-check ml-2"></i>
+                            </button>
 
-                            <div class="space-y-4 max-w-md mx-auto text-left mb-8">
-                                <h3 class="font-semibold text-lg">Resumen de respuestas:</h3>
-                                <div v-for="(question, index) in questions" :key="index"
-                                    class="p-3 border rounded-lg"
-                                    :class="{'bg-green-50 border-green-200': isQuestionCorrect(index), 'bg-red-50 border-red-200': !isQuestionCorrect(index)}">
-                                    <p class="font-medium">Pregunta {{ index + 1 }}: {{ isQuestionCorrect(index) ? '✓ Correcta' : '✗ Incorrecta' }}</p>
-                                </div>
-                                
-                                <div class="mt-8 flex justify-center">
-                                    <button @click="resetQuiz" 
-                                            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                        Reiniciar cuestionario
-                                    </button>
+                            <!-- Botón "Siguiente" / "Finalizar" (AHORA SIEMPRE DEPENDE DE `quizSubmitted`) -->
+                            <button v-else-if="!isLastQuestion" 
+                                    @click="nextQuestion" 
+                                    :disabled="!isAnswerSelected || !quizSubmitted"
+                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700 transition-colors"
+                                    aria-label="Siguiente pregunta">
+                                Siguiente<i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+
+                            <button v-else 
+                                    @click="submitQuiz" 
+                                    :disabled="!isAnswerSelected || !quizSubmitted"
+                                    class="px-6 py-2 bg-green-600 text-white rounded-lg disabled:opacity-50 hover:bg-green-700 transition-colors"
+                                    aria-label="Finalizar evaluación">
+                                Finalizar<i class="fas fa-check ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Resultados del quiz (resto del HTML es el mismo) -->
+                    <div v-else class="text-center py-8">
+                        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-trophy text-4xl text-yellow-500"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold mb-2">¡Evaluación Completada!</h2>
+                        <p class="text-gray-600 mb-6">Has completado la evaluación de la Unidad 1</p>
+                        
+                        <div class="bg-blue-50 p-6 rounded-lg max-w-md mx-auto mb-8">
+                            <div class="text-4xl font-bold text-blue-600 mb-2">{{ score }}%</div>
+                            <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                                <div class="bg-blue-600 h-4 rounded-full" 
+                                    :style="{width: score + '%'}"></div>
+                            </div>
+                            <p class="text-sm text-gray-600">
+                                {{ correctAnswersCount }} de {{ displayedQuestions.length }} respuestas correctas
+                            </p>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Tiempo total: {{ formatTime(elapsedTime) }}
+                            </p>
+                        </div>
+
+                        <!-- Resumen detallado de respuestas -->
+                        <div class="space-y-4 max-w-md mx-auto text-left mb-8">
+                            <h3 class="font-semibold text-lg text-center mb-4">Resumen de respuestas:</h3>
+                            <div v-for="(question, index) in displayedQuestions" :key="index" 
+                                 class="p-4 border rounded-lg"
+                                 :class="isQuestionCorrect(index) ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <i v-if="isQuestionCorrect(index)" 
+                                           class="fas fa-check-circle text-green-500 text-xl"></i>
+                                        <i v-else 
+                                           class="fas fa-times-circle text-red-500 text-xl"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="font-medium">Pregunta {{ index + 1 }}: {{ question.question }}</h3>
+                                        <p v-if="!isQuestionCorrect(index)" class="text-sm text-gray-600 mt-1">
+                                            <span class="font-medium">Respuesta correcta:</span> 
+                                            <span v-if="question.type === 'truefalse'">
+                                                {{ question.correctAnswer }}
+                                            </span>
+                                            <span v-else-if="question.type === 'choice' && !question.multiple">
+                                                {{ question.options.find(opt => opt.correct)?.text }}
+                                            </span>
+                                            <span v-else-if="question.type === 'choice' && question.multiple">
+                                                {{ question.options.filter(opt => opt.correct).map(opt => opt.text).join(', ') }}
+                                            </span>
+                                            <span v-else-if="question.type === 'matching'">
+                                                <ul class="list-disc pl-5">
+                                                    <li v-for="(item, i) in question.items" :key="i">
+                                                        {{ item.term }}: {{ item.correct }}
+                                                    </li>
+                                                </ul>
+                                            </span>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Resumen de respuestas -->
-                        <div v-else class="mt-8">
-                            <div class="bg-white rounded-lg shadow-md p-6">
-                                <h2 class="text-2xl font-bold mb-6 text-center">Resumen de respuestas</h2>
-                                
-                                <div class="mb-6 p-4 bg-blue-50 rounded-lg">
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-lg font-medium">Puntuación final:</span>
-                                        <span class="text-2xl font-bold">
-                                            {{ correctAnswersCount }} / {{ questions.length }} 
-                                            ({{ Math.round((correctAnswersCount / questions.length) * 100) }}%)
-                                        </span>
-                                    </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
-                                        <div class="bg-green-500 h-4 rounded-full" 
-                                             :style="{ width: (correctAnswersCount / questions.length) * 100 + '%' }">
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="space-y-4">
-                                    <div v-for="(question, index) in questions" :key="index" 
-                                         class="p-4 border rounded-lg"
-                                         :class="isQuestionCorrect(index) ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'">
-                                        <div class="flex items-start">
-                                            <div class="flex-shrink-0 mt-1">
-                                                <i v-if="isQuestionCorrect(index)" 
-                                                   class="fas fa-check-circle text-green-500 text-xl"></i>
-                                                <i v-else 
-                                                   class="fas fa-times-circle text-red-500 text-xl"></i>
-                                            </div>
-                                            <div class="ml-3">
-                                                <h3 class="font-medium">Pregunta {{ index + 1 }}: {{ question.question }}</h3>
-                                                <p v-if="!isQuestionCorrect(index)" class="text-sm text-gray-600 mt-1">
-                                                    <span class="font-medium">Respuesta correcta:</span> 
-                                                    <span v-if="question.type === 'truefalse'">
-                                                        {{ question.correctAnswer }}
-                                                    </span>
-                                                    <span v-else-if="question.type === 'choice' && !question.multiple">
-                                                        {{ question.options.find(opt => opt.correct)?.text }}
-                                                    </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="mt-8 flex justify-center">
-                                    <button @click="resetQuiz" 
-                                            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                        Reiniciar cuestionario
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="mt-8 flex justify-center">
+                            <button @click="resetQuiz" 
+                                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                    aria-label="Reiniciar cuestionario">
+                                Reiniciar cuestionario
+                            </button>
                         </div>
                     </div>
-                </main>
+                </div>
+            </main>
 
-                <!-- Footer -->
-                <footer class="bg-gray-800 text-white py-6">
-                    <div class="container mx-auto px-4 text-center">
-                        <p>© 2025 Escuela Superior Politécnica Agropecuaria de Manabí Manuel Félix López</p>
-                        <p class="text-gray-400 text-sm mt-1">Carrera de Computación - Mgtr. Joffre Moreira Pico</p>
-                    </div>
-                </footer>
-            </div>
+            <!-- Footer -->
+            <footer class="bg-gray-800 text-white py-6 mt-auto">
+                <div class="container mx-auto px-4 text-center">
+                    <p>© 2025 Escuela Superior Politécnica Agropecuaria de Manabí Manuel Félix López</p>
+                    <p class="text-gray-400 text-sm mt-1">Carrera de Computación - Mgtr. Joffre Moreira Pico</p>
+                </div>
+            </footer>
+        </div>
     </div>
 
-    <!-- Cargar Vue.js localmente -->
+        <!-- Cargar dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.min.js"></script>
+    <!-- Cargar las preguntas desde un archivo externo -->
+    <script src="public/questions.js"></script> 
     <script>
-        const { createApp, ref, computed, onMounted } = Vue;
+        const { createApp, ref, computed, onMounted, nextTick, watch } = Vue; 
+
+        // Usar las preguntas cargadas desde questions.js
+        const allQuestions = window.quizQuestions || [];
+        
+        if (allQuestions.length === 0) {
+            console.error('No se pudieron cargar las preguntas. Verifica que el archivo public/questions.js esté correctamente configurado y asigne las preguntas a window.quizQuestions.');
+        }
 
         // Crear la aplicación Vue
         const app = createApp({
             setup() {
-                // Questions data
-                const questions = [
-                    {
-                        type: 'choice',
-                        multiple: false,
-                        question: '¿Qué es una red de computadoras?',
-                        options: [
-                            { text: 'Un software de diseño gráfico', correct: false },
-                            { text: 'Una conexión de dispositivos para compartir información y recursos', correct: true },
-                            { text: 'Un tipo de archivo multimedia', correct: false },
-                            { text: 'Un lenguaje de programación', correct: false }
-                        ],
-                        explanation: 'Una red conecta dispositivos para permitir la comunicación entre ellos.'
-                    },
-                    {
-                        type: 'truefalse',
-                        question: 'Las redes WAN son redes de área pequeña.',
-                        correctAnswer: 'Falso',
-                        explanation: 'Las WAN (Wide Area Network) abarcan grandes extensiones geográficas.'
-                    },
-                    {
-                        type: 'choice',
-                        multiple: true,
-                        question: '¿Cuáles de los siguientes elementos son componentes de una red?',
-                        options: [
-                            { text: 'Computadoras', correct: true },
-                            { text: 'Switches', correct: true },
-                            { text: 'Lámparas', correct: false },
-                            { text: 'Cables Ethernet', correct: true }
-                        ],
-                        explanation: 'Los dispositivos, medios de transmisión y dispositivos de red conforman una red.'
-                    },
-                    {
-                        type: 'matching',
-                        question: 'Relacione cada capa del modelo OSI con su función principal.',
-                        items: [
-                            { term: 'Física', correct: 'Transmisión de bits' },
-                            { term: 'Transporte', correct: 'Entrega fiable de datos' },
-                            { term: 'Red', correct: 'Direccionamiento IP' },
-                            { term: 'Aplicación', correct: 'Interacción del usuario con la red' }
-                        ],
-                        options: [
-                            'Transmisión de bits',
-                            'Entrega fiable de datos',
-                            'Direccionamiento IP',
-                            'Interacción del usuario con la red'
-                        ],
-                        explanation: 'Cada capa del modelo OSI cumple una función específica dentro del proceso de comunicación.'
-                    },
-                    {
-                        type: 'truefalse',
-                        question: 'La capa de sesión del modelo OSI es la responsable de iniciar y mantener una comunicación.',
-                        correctAnswer: 'Verdadero',
-                        explanation: 'Esta capa establece y gestiona sesiones entre aplicaciones.'
-                    },
-                    {
-                        type: 'choice',
-                        multiple: false,
-                        question: '¿Cuál es el protocolo principal de la capa de red del modelo TCP/IP?',
-                        options: [
-                            { text: 'HTTP', correct: false },
-                            { text: 'IP', correct: true },
-                            { text: 'FTP', correct: false },
-                            { text: 'TCP', correct: false }
-                        ],
-                        explanation: 'La capa Internet usa el protocolo IP para direccionamiento y enrutamiento.'
-                    },
-                    {
-                        type: 'choice',
-                        multiple: true,
-                        question: 'Selecciona capas del modelo OSI que no tienen correspondencia directa en TCP/IP.',
-                        options: [
-                            { text: 'Presentación', correct: true },
-                            { text: 'Sesión', correct: true },
-                            { text: 'Red', correct: false },
-                            { text: 'Aplicación', correct: false }
-                        ],
-                        explanation: 'Las capas Sesión y Presentación están integradas en la capa de Aplicación del TCP/IP.'
-                    },
-                    {
-                        type: 'choice',
-                        multiple: false,
-                        question: 'El modelo TCP/IP tiene cuántas capas:',
-                        options: [
-                            { text: '7', correct: false },
-                            { text: '5', correct: false },
-                            { text: '4', correct: true },
-                            { text: '3', correct: false }
-                        ],
-                        explanation: 'El modelo TCP/IP posee 4 capas principales: Aplicación, Transporte, Internet y Acceso a la red.'
-                    },
-                    {
-                        type: 'truefalse',
-                        question: 'En el encapsulamiento, el tráiler se añade en la capa de red.',
-                        correctAnswer: 'Falso',
-                        explanation: 'El tráiler se añade en la capa de enlace de datos.'
-                    },
+                // Configuración de usuario
+                const randomizeQuestions = ref(localStorage.getItem('randomizeQuestions') === 'true');
+                const randomizeOptions = ref(localStorage.getItem('randomizeOptions') === 'true');
 
-                ];
-
-                // State
+                // Estado del quiz
+                const displayedQuestions = ref([]); // Array de preguntas actual, puede ser aleatorio
                 const currentQuestionIndex = ref(0);
-                const userAnswers = ref(Array(questions.length).fill().map(() => ({})));
-                const quizSubmitted = ref(false);
-                const quizCompleted = ref(false);
-                const showFeedback = ref(false);
-                const isAnswerCorrect = ref(false);
+                const userAnswers = ref([]); // Almacena las respuestas del usuario
+                const quizSubmitted = ref(false); // Indica si la pregunta actual ha sido "evaluada"
+                const quizCompleted = ref(false); // CORRECCIÓN: Inicializar con false, no con ref
+                const showFeedback = ref(false); // Controla la visibilidad del feedback de la pregunta actual
+                const isAnswerCorrect = ref(false); // Resultado del feedback de la pregunta actual
 
-                // Computed
+                // Estado del temporizador
+                const quizStartTime = ref(0); // Este ref no se usa, pero no causa problema
+                const elapsedTime = ref(0);
+                let timerInterval = null;
+
+                // Watchers para guardar configuración en localStorage
+                watch(randomizeQuestions, (newValue) => {
+                    localStorage.setItem('randomizeQuestions', newValue);
+                    resetQuiz(); // Reiniciar el quiz si cambia la configuración
+                });
+                watch(randomizeOptions, (newValue) => {
+                    localStorage.setItem('randomizeOptions', newValue);
+                    resetQuiz(); // Reiniciar el quiz si cambia la configuración
+                });
+
+
+                // Propiedades computadas
                 const currentQuestion = computed(() => {
-                    // Inicializar respuestas cuando cambia la pregunta
-                    setTimeout(() => {
-                        initializeUserAnswers();
-                    }, 0);
-                    return questions[currentQuestionIndex.value];
+                    // Verificación añadida para asegurar que no sea undefined al inicio
+                    if (!displayedQuestions.value || displayedQuestions.value.length === 0) {
+                        return null; // O un objeto placeholder vacío si prefieres
+                    }
+                    return displayedQuestions.value[currentQuestionIndex.value];
                 });
                 
-                const isLastQuestion = computed(() => currentQuestionIndex.value === questions.length - 1);
+                const isLastQuestion = computed(() => currentQuestionIndex.value === displayedQuestions.value.length - 1);
+                
                 const isAnswerSelected = computed(() => {
-                    if (currentQuestion.value.type === 'matching') {
-                        return Object.keys(userAnswers.value[currentQuestionIndex.value] || {}).length > 0;
+                    const currentAns = userAnswers.value[currentQuestionIndex.value];
+                    const qType = currentQuestion.value?.type; // Usar optional chaining
+
+                    if (qType === 'choice' && currentQuestion.value.multiple) {
+                        return Array.isArray(currentAns) && currentAns.length > 0;
+                    } else if (qType === 'choice' || qType === 'truefalse') {
+                        return currentAns !== null && currentAns !== undefined;
+                    } else if (qType === 'matching') {
+                        const numItems = currentQuestion.value.items.length;
+                        const selectedAnswers = currentAns || {}; 
+                        const numSelected = Object.keys(selectedAnswers).length;
+
+                        // Asegúrate de que todas las opciones de matching tengan un valor seleccionado
+                        return numSelected === numItems && Object.values(selectedAnswers).every(val => val !== '' && val !== null && val !== undefined);
                     }
-                    return userAnswers.value[currentQuestionIndex.value] !== undefined && 
-                           userAnswers.value[currentQuestionIndex.value] !== null;
+                    return false;
                 });
 
-                const correctAnswers = computed(() => {
-                    return questions.reduce((count, question, index) => {
+                const score = computed(() => {
+                    if (displayedQuestions.value.length === 0) return 0;
+                    return Math.round((correctAnswersCount.value / displayedQuestions.value.length) * 100);
+                });
+                
+                const correctAnswersCount = computed(() => {
+                    return displayedQuestions.value.reduce((count, _, index) => {
                         return count + (isQuestionCorrect(index) ? 1 : 0);
                     }, 0);
                 });
 
-                const score = computed(() => {
-                    return Math.round((correctAnswers.value / questions.length) * 100);
-                });
+                // Métodos auxiliares
+                function shuffleArray(array) {
+                    // Crear una copia del array para no mutar el original
+                    const newArray = [...array]; 
+                    for (let i = newArray.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                    }
+                    return newArray;
+                }
 
-                // Lifecycle Hooks
-                onMounted(() => {
-                    initializeUserAnswers();
-                });
+                function formatTime(seconds) {
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                }
 
-                // Methods
-                function initializeUserAnswers() {
-                    if (!userAnswers.value[currentQuestionIndex.value]) {
-                        if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
-                            userAnswers.value[currentQuestionIndex.value] = [];
-                        } else if (currentQuestion.value.type === 'matching') {
-                            userAnswers.value[currentQuestionIndex.value] = {};
-                        } else {
-                            userAnswers.value[currentQuestionIndex.value] = null;
-                        }
+                // Lógica del temporizador
+                function startTimer() {
+                    if (timerInterval) clearInterval(timerInterval);
+                    timerInterval = setInterval(() => {
+                        elapsedTime.value++;
+                    }, 1000);
+                }
+
+                function stopTimer() {
+                    if (timerInterval) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
                     }
                 }
-                
-                function isMatchingCorrect(index) {
-                    if (!quizSubmitted.value) return false;
-                    const userAnswer = userAnswers.value[currentQuestionIndex.value]?.[index];
-                    if (userAnswer === undefined) return false;
-                    return userAnswer === currentQuestion.value.items[index].correct;
-                }
-                
-                function isOptionUsed(option, currentIndex) {
-                    if (!quizSubmitted.value) return false;
-                    return Object.entries(userAnswers.value[currentQuestionIndex.value] || {})
-                        .some(([idx, ans]) => parseInt(idx) !== currentIndex && ans === option);
+
+                // Lógica de carga/guardado de progreso
+                function saveProgress() {
+                    try {
+                        const progress = {
+                            currentQuestionIndex: currentQuestionIndex.value,
+                            userAnswers: userAnswers.value,
+                            quizCompleted: quizCompleted.value,
+                            elapsedTime: elapsedTime.value,
+                            displayedQuestionIds: displayedQuestions.value.map(q => q.id), // Guardar solo IDs si son aleatorias
+                            randomizeQuestions: randomizeQuestions.value, // Guardar configuración
+                            randomizeOptions: randomizeOptions.value // Guardar configuración
+                        };
+                        localStorage.setItem('quizProgress', JSON.stringify(progress));
+                    } catch (e) {
+                        console.error("Error al guardar el progreso:", e);
+                    }
                 }
 
-                function isOptionSelected(option, index) {
-                    const currentAnswer = userAnswers.value[currentQuestionIndex.value];
-                    if (!currentAnswer) return false;
-                    
-                    if (currentQuestion.value.type === 'choice') {
-                        if (currentQuestion.value.multiple) {
-                            return Array.isArray(currentAnswer) && 
-                                   currentAnswer.some(ans => ans && ans.text === option.text);
+                function loadProgress() {
+                    try {
+                        const savedProgress = localStorage.getItem('quizProgress');
+                        if (savedProgress) {
+                            const progress = JSON.parse(savedProgress);
+                            
+                            // Verificar si las configuraciones de aleatorización han cambiado
+                            const configChanged = (progress.randomizeQuestions !== randomizeQuestions.value ||
+                                                   progress.randomizeOptions !== randomizeOptions.value);
+
+                            if (configChanged || !progress.displayedQuestionIds || progress.displayedQuestionIds.length === 0) {
+                                // Si la configuración cambió o no hay IDs guardados, iniciar un quiz nuevo
+                                console.log("Configuración de quiz cambiada o progreso inválido. Iniciando quiz nuevo.");
+                                initializeQuizQuestions(true); // Pasar 'true' para forzar reinicio de respuestas
+                                startTimer();
+                                return; // Salir de la función para evitar sobrescribir
+                            }
+
+                            currentQuestionIndex.value = progress.currentQuestionIndex;
+                            userAnswers.value = progress.userAnswers;
+                            quizCompleted.value = progress.quizCompleted; // CORRECTO: Asignar el valor guardado
+                            elapsedTime.value = progress.elapsedTime;
+                            
+                            // Reconstruir displayedQuestions usando los IDs guardados
+                            displayedQuestions.value = progress.displayedQuestionIds
+                                .map(id => allQuestions.find(q => q.id === id))
+                                .filter(q => q); // Asegurarse de que no haya preguntas nulas
+
+                            if (!quizCompleted.value) {
+                                startTimer();
+                            } else {
+                                stopTimer();
+                            }
+                            console.log("Progreso cargado con éxito.");
                         } else {
-                            return currentAnswer && currentAnswer.text === option.text;
+                            initializeQuizQuestions(true); // Iniciar un quiz nuevo y respuestas
+                            startTimer();
                         }
-                    } else if (currentQuestion.value.type === 'truefalse') {
-                        return currentAnswer === option;
-                    } else if (currentQuestion.value.type === 'matching' && index !== undefined) {
-                        return currentAnswer[index] !== undefined;
+                    } catch (e) {
+                        console.error("Error al cargar el progreso:", e);
+                        // En caso de error, iniciar un quiz nuevo
+                        initializeQuizQuestions(true);
+                        startTimer();
+                    }
+                }
+
+                function initializeQuizQuestions(resetAnswers = false) {
+                    let tempQuestions = [...allQuestions];
+                    if (randomizeQuestions.value) {
+                        tempQuestions = shuffleArray(tempQuestions);
+                    }
+                    
+                    // Asegúrate de que las opciones también se aleatoricen si se pide
+                    displayedQuestions.value = tempQuestions.map(q => {
+                        let newQ = { ...q };
+                        if (newQ.type === 'choice' && randomizeOptions.value && newQ.options) {
+                            newQ.options = shuffleArray(newQ.options);
+                        }
+                        if (newQ.type === 'matching' && randomizeOptions.value && newQ.options) {
+                            // Las opciones para matching son las posibles respuestas, no los términos
+                            // Shuffulear aquí es correcto.
+                            newQ.options = shuffleArray(newQ.options);
+                        }
+                        return newQ;
+                    });
+                    
+                    // Inicializar userAnswers para el nuevo set de preguntas SOLO si se pide resetear o es la primera carga
+                    if (resetAnswers) {
+                        userAnswers.value = Array(displayedQuestions.value.length).fill(null).map((_, idx) => {
+                            const q = displayedQuestions.value[idx];
+                            if (q.type === 'matching') {
+                                const initialMatchingAnswers = {};
+                                q.items.forEach((_, itemIdx) => { initialMatchingAnswers[itemIdx] = ''; });
+                                return initialMatchingAnswers;
+                            } else if (q.type === 'choice' && q.multiple) {
+                                return [];
+                            } else {
+                                return null;
+                            }
+                        });
+                    }
+                }
+
+
+                // Lógica de las preguntas
+                function isOptionCorrect(option) {
+                    const question = currentQuestion.value;
+                    if (question?.type === 'choice') { // Usar optional chaining
+                        return option.correct === true;
+                    } else if (question?.type === 'truefalse') { // Usar optional chaining
+                        return option === question.correctAnswer;
                     }
                     return false;
                 }
 
                 function getOptionClass(option, index) {
                     const isSelected = isOptionSelected(option, index);
-                    const question = currentQuestion.value;
-
+                    
                     if (!quizSubmitted.value) {
+                        // Resaltado antes de enviar la respuesta
                         return isSelected 
                             ? 'bg-blue-50 border-blue-300' 
                             : 'hover:bg-gray-50';
                     }
-
-                    // Para preguntas de verdadero/falso
-                    if (question.type === 'truefalse') {
-                        const isCorrect = isOptionCorrect(option);
-                        if (isSelected) {
-                            return isCorrect 
-                                ? 'bg-green-50 border-green-500' 
-                                : 'bg-red-50 border-red-500';
-                        }
-                        return isCorrect ? 'bg-green-50 border-green-300' : 'bg-gray-50';
+                    
+                    // Retroalimentación después de enviar la respuesta
+                    const isCorrect = isOptionCorrect(option); // Esta es para choice/truefalse
+                    if (isCorrect) {
+                        return isSelected ? 'bg-green-100 border-green-500' : 'bg-green-50 border-green-300';
+                    } else if (isSelected) {
+                        return 'bg-red-50 border-red-500';
                     }
-
-                    // Para preguntas de opción múltiple o única
-                    if (question.type === 'choice') {
-                        if (isSelected) {
-                            return option.correct 
-                                ? 'bg-green-50 border-green-500' 
-                                : 'bg-red-50 border-red-500';
-                        }
-                        return option.correct ? 'bg-green-50 border-green-300' : 'bg-gray-50';
-                    }
-
+                    
+                    // Si no está seleccionada y no es la correcta, o es matching, color por defecto
                     return 'bg-gray-50';
                 }
 
-                function toggleOption(option, event) {
-                    if (quizSubmitted.value) return;
+                function isOptionSelected(option, index) {
+                    const currentAnswer = userAnswers.value[currentQuestionIndex.value];
+                    if (currentAnswer === null || currentAnswer === undefined) return false;
                     
+                    const question = currentQuestion.value;
+
+                    if (question?.type === 'choice') { // Usar optional chaining
+                        if (question.multiple) {
+                            return Array.isArray(currentAnswer) && 
+                                   currentAnswer.some(ans => ans && ans.text === option.text);
+                        } else {
+                            return currentAnswer && currentAnswer.text === option.text;
+                        }
+                    } else if (question?.type === 'truefalse') { // Usar optional chaining
+                        return currentAnswer === option;
+                    } else if (question?.type === 'matching' && index !== undefined) { // Usar optional chaining
+                        // Para matching, `option` es el texto de la opción del select, `index` es el índice del item
+                        // currentAnswer[index] debería ser el valor seleccionado para ese item
+                        return currentAnswer[index] !== undefined && currentAnswer[index] === option;
+                    }
+                    return false;
+                }
+
+                function toggleOption(option, event) {
                     const currentAnswer = userAnswers.value[currentQuestionIndex.value] || [];
-                    const optionIndex = currentAnswer.findIndex(ans => ans.text === option.text);
+                    const optionIndex = currentAnswer.findIndex(ans => ans && ans.text === option.text);
                     
                     if (optionIndex === -1) {
-                        // Agregar la opción si no está seleccionada
                         userAnswers.value[currentQuestionIndex.value] = [...currentAnswer, option];
                     } else {
-                        // Quitar la opción si ya está seleccionada
                         const newAnswers = [...currentAnswer];
                         newAnswers.splice(optionIndex, 1);
                         userAnswers.value[currentQuestionIndex.value] = newAnswers;
                     }
-                    
-                    checkAnswer();
+                    saveProgress(); // Guardar progreso después de cada cambio de selección
                 }
 
                 function selectSingleOption(option, event) {
-                    if (quizSubmitted.value) return;
                     userAnswers.value[currentQuestionIndex.value] = option;
-                    checkAnswer();
+                    checkAnswer(); // Para selección única, la respuesta se verifica inmediatamente
                 }
 
                 function checkAnswer() {
-                    if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
-                        const selectedOptions = userAnswers.value[currentQuestionIndex.value] || [];
-                        const correctOptions = currentQuestion.value.options.filter(opt => opt.correct);
+                    const question = currentQuestion.value;
+                    const userAnswer = userAnswers.value[currentQuestionIndex.value];
+
+                    let currentQIsCorrect = false; 
+
+                    if (!isAnswerSelected.value) { // Si no hay respuesta seleccionada, no hay feedback ni se "envía"
+                        showFeedback.value = false;
+                        quizSubmitted.value = false;
+                        isAnswerCorrect.value = false; // Resetear también
+                        return;
+                    }
+
+                    if (question.type === 'choice' && question.multiple) {
+                        const selectedOptions = userAnswer || [];
+                        const correctOptions = question.options.filter(opt => opt.correct);
                         
-                        // Verificar que se hayan seleccionado todas las opciones correctas y ninguna incorrecta
-                        const allCorrect = correctOptions.every(opt => 
-                            selectedOptions.some(sel => sel.text === opt.text)
-                        ) && selectedOptions.every(sel => 
-                            correctOptions.some(opt => opt.text === sel.text)
+                        const allCorrectSelected = correctOptions.every(opt => 
+                            selectedOptions.some(sel => sel && sel.text === opt.text)
+                        );
+                        const noIncorrectSelected = selectedOptions.every(sel => 
+                            correctOptions.some(opt => opt.text === (sel?.text || sel))
                         );
                         
-                        isAnswerCorrect.value = allCorrect && selectedOptions.length === correctOptions.length;
-                    } else if (currentQuestion.value.type === 'choice' && !currentQuestion.value.multiple) {
-                        isAnswerCorrect.value = userAnswers.value[currentQuestionIndex.value]?.correct === true;
-                    } else if (currentQuestion.value.type === 'truefalse') {
-                        isAnswerCorrect.value = userAnswers.value[currentQuestionIndex.value] === currentQuestion.value.correctAnswer;
-                    } else if (currentQuestion.value.type === 'matching') {
-                        const currentAnswers = userAnswers.value[currentQuestionIndex.value];
-                        isAnswerCorrect.value = Object.entries(currentAnswers || {}).every(([index, answer]) => {
-                            return answer === currentQuestion.value.items[index].correct;
-                        });
+                        currentQIsCorrect = allCorrectSelected && noIncorrectSelected && selectedOptions.length === correctOptions.length;
+
+                    } else if (question.type === 'choice' && !question.multiple) {
+                        currentQIsCorrect = userAnswer?.correct === true;
+                    } else if (question.type === 'truefalse') {
+                        currentQIsCorrect = userAnswer === question.correctAnswer;
+                    } else if (question.type === 'matching') {
+                        const currentAnswers = userAnswer;
+                        currentQIsCorrect = Object.entries(currentAnswers || {}).every(([index, answer]) => {
+                            // CORRECCIÓN: Asegura que el índice de `items` coincida con la respuesta en `userAnswers`
+                            return answer === question.items[parseInt(index)].correct; 
+                        }) && Object.keys(currentAnswers).length === question.items.length; 
                     }
-                    
-                    showFeedback.value = true;
-                    quizSubmitted.value = true;
+
+                    isAnswerCorrect.value = currentQIsCorrect; 
+
+                    nextTick(() => {
+                        // quizSubmitted y showFeedback solo se activan cuando la pregunta es "completa"
+                        // y el usuario ha disparado la verificación (automática o con botón)
+                        showFeedback.value = true;
+                        quizSubmitted.value = true;
+
+                        console.log(`[checkAnswer Debug] Q${currentQuestionIndex.value + 1} (${question.type}): ` +
+                                    `User Answer:`, JSON.stringify(userAnswers.value[currentQuestionIndex.value]),
+                                    `| isAnswerSelected (computed): ${isAnswerSelected.value}, ` +
+                                    `| quizSubmitted: ${quizSubmitted.value}, ` +
+                                    `| isAnswerCorrect: ${isAnswerCorrect.value}`);
+                        saveProgress(); 
+                    });
                 }
 
                 function nextQuestion() {
-                    if (currentQuestionIndex.value < questions.length - 1) {
+                    if (currentQuestionIndex.value < displayedQuestions.value.length - 1) {
                         currentQuestionIndex.value++;
                         showFeedback.value = false;
                         quizSubmitted.value = false;
+                        isAnswerCorrect.value = false; // MEJORA: Resetear el estado de la respuesta correcta
                     }
+                    saveProgress();
                 }
 
                 function previousQuestion() {
@@ -597,156 +702,93 @@
                         currentQuestionIndex.value--;
                         showFeedback.value = false;
                         quizSubmitted.value = false;
+                        isAnswerCorrect.value = false; // MEJORA: Resetear el estado de la respuesta correcta
                     }
+                    saveProgress();
                 }
 
                 function submitQuiz() {
-                    if (!quizSubmitted.value) {
-                        checkAnswer();
+                    if (!quizSubmitted.value) { // Asegúrate de que la última pregunta se verifique
+                        checkAnswer(); 
                     }
                     quizCompleted.value = true;
+                    stopTimer();
+                    saveProgress(); 
                 }
 
                 function resetQuiz() {
+                    stopTimer();
                     currentQuestionIndex.value = 0;
-                    userAnswers.value = Array(questions.length).fill().map(() => ({}));
                     quizSubmitted.value = false;
                     quizCompleted.value = false;
                     showFeedback.value = false;
-                    // Forzar actualización de la UI
-                    currentQuestionIndex.value = 0;
-                }
-
-
-
-                function isOptionCorrect(option) {
-                    if (!quizSubmitted.value) return false;
+                    isAnswerCorrect.value = false; // Resetear también
+                    elapsedTime.value = 0;
+                    localStorage.removeItem('quizProgress'); 
                     
-                    if (currentQuestion.value.type === 'choice') {
-                        // Para preguntas de opción múltiple o única
-                        return option.correct === true;
-                    } else if (currentQuestion.value.type === 'truefalse') {
-                        // Para preguntas de verdadero/falso
-                        return option === currentQuestion.value.correctAnswer;
-                    }
-                    return false;
-                }
-
-                function getOptionClass(option, index) {
-                    const isSelected = isOptionSelected(option, index);
-                    const isCorrect = isOptionCorrect(option);
-                    
-                    if (!quizSubmitted.value) {
-                        // Antes de enviar, resaltar la opción seleccionada
-                        return isSelected 
-                            ? 'bg-blue-50 border-blue-300' 
-                            : 'hover:bg-gray-50';
-                    }
-                    
-                    // Después de enviar, mostrar retroalimentación
-                    if (isCorrect) {
-                        // Opción correcta - siempre en verde
-                        if (currentQuestion.value.type === 'truefalse' && isSelected) {
-                            return 'bg-green-50 border-green-500';
-                        } else if (currentQuestion.value.type === 'choice') {
-                            return 'bg-green-50 border-green-500';
-                        }
-                        return 'bg-green-50 border-green-300';
-                    } else if (isSelected) {
-                        // Opción seleccionada pero incorrecta - en rojo
-                        return 'bg-red-50 border-red-500';
-                    }
-                    
-                    // Opción no seleccionada y no es correcta
-                    return 'bg-gray-50';
-                }
-
-                function getOptionBulletClass(option, index) {
-                    if (!quizSubmitted.value) return 'border-gray-300';
-                    
-                    const isSelected = isOptionSelected(option, index);
-                    
-                    if (option.correct) {
-                        return isSelected ? 'bg-green-100 border-green-500' : 'bg-green-50 border-green-300';
-                    } else if (isSelected && !option.correct) {
-                        return 'bg-red-100 border-red-500';
-                    }
-                    return 'border-gray-300';
+                    initializeQuizQuestions(true); // Reiniciar preguntas y respuestas
+                    startTimer();
+                    saveProgress(); 
                 }
 
                 function isMatchingCorrect(index) {
                     if (!quizSubmitted.value) return false;
-                    const answer = userAnswers.value[currentQuestionIndex.value][index];
-                    return answer === currentQuestion.value.items[index].correct;
-                }
-
-                function toggleOption(option, event) {
-                    if (quizSubmitted.value) return;
-                    
-                    const currentAnswer = userAnswers.value[currentQuestionIndex.value] || [];
-                    const optionIndex = currentAnswer.findIndex(ans => ans && ans.text === option.text);
-                    
-                    if (optionIndex === -1) {
-                        // Agregar la opción si no está seleccionada
-                        userAnswers.value[currentQuestionIndex.value] = [...currentAnswer, option];
-                    } else {
-                        // Quitar la opción si ya está seleccionada
-                        const newAnswers = [...currentAnswer];
-                        newAnswers.splice(optionIndex, 1);
-                        userAnswers.value[currentQuestionIndex.value] = newAnswers;
-                    }
-                    
-                    checkAnswer();
+                    const userAnswer = userAnswers.value[currentQuestionIndex.value]?.[index];
+                    return userAnswer !== undefined && userAnswer !== '' && 
+                           currentQuestion.value.items[parseInt(index)] && userAnswer === currentQuestion.value.items[parseInt(index)].correct; // CORRECCIÓN: parseInt(index)
                 }
                 
                 function isOptionUsed(option, currentIndex) {
-                    if (!quizSubmitted.value) {
-                        const currentAnswers = Object.values(userAnswers.value[currentQuestionIndex.value] || {});
-                        return currentAnswers.includes(option) && userAnswers.value[currentQuestionIndex.value][currentIndex] !== option;
-                    }
-                    return false;
+                    const currentAnswers = userAnswers.value[currentQuestionIndex.value] || {};
+                    // Verificar si la opción ya está seleccionada para *otro* término de matching
+                    return Object.entries(currentAnswers)
+                        .some(([idx, ans]) => parseInt(idx) !== currentIndex && ans === option);
                 }
 
                 function isQuestionCorrect(questionIndex) {
-                    const question = questions[questionIndex];
+                    const question = displayedQuestions.value[questionIndex];
                     const answer = userAnswers.value[questionIndex];
+
+                    if (!question || !answer) return false; // Protección adicional
 
                     if (question.type === 'choice') {
                         if (question.multiple) {
                             const selectedOptions = answer || [];
                             const correctOptions = question.options.filter(opt => opt.correct);
 
-                            const allCorrect = correctOptions.every(opt =>
+                            const allCorrectSelected = correctOptions.every(opt =>
                                 selectedOptions.some(sel => sel && sel.text === opt.text)
-                            ) && selectedOptions.every(sel =>
+                            );
+                            const noIncorrectSelected = selectedOptions.every(sel =>
                                 correctOptions.some(opt => opt.text === (sel?.text || sel))
                             );
 
-                            return allCorrect && selectedOptions.length === correctOptions.length;
+                            return allCorrectSelected && noIncorrectSelected && selectedOptions.length === correctOptions.length;
                         } else {
                             return answer?.correct === true;
                         }
                     } else if (question.type === 'truefalse') {
                         return answer === question.correctAnswer;
                     } else if (question.type === 'matching') {
-                        return Object.entries(answer || {}).every(([index, value]) =>
-                            value === question.items[index].correct
-                        );
+                        const currentMatchingAnswers = answer || {};
+                        return question.items.every((item, index) => 
+                            currentMatchingAnswers[index] === item.correct // 'index' aquí es numérico del `every`
+                        ) && Object.keys(currentMatchingAnswers).length === question.items.length && Object.values(currentMatchingAnswers).every(val => val !== '' && val !== null && val !== undefined); 
                     }
-
                     return false;
                 }
 
-
-                // Contar respuestas correctas
-                const correctAnswersCount = computed(() => {
-                    return questions.reduce((count, _, index) => {
-                        return count + (isQuestionCorrect(index) ? 1 : 0);
-                    }, 0);
+                // Cargar progreso o iniciar quiz al montar el componente
+                onMounted(() => {
+                    loadProgress();
+                    window.addEventListener('beforeunload', saveProgress);
                 });
 
+                // Devolver propiedades y métodos para la plantilla
                 return {
-                    questions,
+                    randomizeQuestions,
+                    randomizeOptions,
+                    displayedQuestions,
                     currentQuestionIndex,
                     userAnswers,
                     quizSubmitted,
@@ -756,10 +798,14 @@
                     currentQuestion,
                     isLastQuestion,
                     isAnswerSelected,
-                    correctAnswers,
                     score,
+                    elapsedTime,
+                    correctAnswersCount,
+                    
+                    formatTime,
                     toggleOption,
                     selectSingleOption,
+                    checkAnswer, 
                     nextQuestion,
                     previousQuestion,
                     submitQuiz,
@@ -767,11 +813,9 @@
                     isOptionSelected,
                     isOptionCorrect,
                     getOptionClass,
-                    getOptionBulletClass,
                     isMatchingCorrect,
                     isOptionUsed,
                     isQuestionCorrect,
-                    correctAnswersCount
                 };
             }
         }).mount('#app');
