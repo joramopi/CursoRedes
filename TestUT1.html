@@ -424,10 +424,13 @@
                     const currentAnswer = userAnswers.value[currentQuestionIndex.value];
                     if (!currentAnswer) return false;
                     
-                    if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
-                        return Array.isArray(currentAnswer) && currentAnswer.some(ans => ans && ans.text === option.text);
-                    } else if (currentQuestion.value.type === 'choice' && !currentQuestion.value.multiple) {
-                        return currentAnswer && currentAnswer.text === option.text;
+                    if (currentQuestion.value.type === 'choice') {
+                        if (currentQuestion.value.multiple) {
+                            return Array.isArray(currentAnswer) && 
+                                   currentAnswer.some(ans => ans && ans.text === option.text);
+                        } else {
+                            return currentAnswer && currentAnswer.text === option.text;
+                        }
                     } else if (currentQuestion.value.type === 'truefalse') {
                         return currentAnswer === option;
                     } else if (currentQuestion.value.type === 'matching' && index !== undefined) {
@@ -438,50 +441,34 @@
 
                 function getOptionClass(option, index) {
                     const isSelected = isOptionSelected(option, index);
+                    const question = currentQuestion.value;
 
                     if (!quizSubmitted.value) {
-                        // Antes de enviar, resaltar la opción seleccionada
                         return isSelected 
                             ? 'bg-blue-50 border-blue-300' 
                             : 'hover:bg-gray-50';
                     }
 
-
                     // Para preguntas de verdadero/falso
-                    if (currentQuestion.value.type === 'truefalse') {
-                        if (isOptionSelected(option) && isOptionCorrect(option)) {
-                            return 'bg-green-50 border-green-500';
-                        } else if (isOptionSelected(option) && !isOptionCorrect(option)) {
-                            return 'bg-red-50 border-red-500';
-                        } else if (isOptionCorrect(option)) {
-                            return 'bg-green-50 border-green-300';
+                    if (question.type === 'truefalse') {
+                        const isCorrect = isOptionCorrect(option);
+                        if (isSelected) {
+                            return isCorrect 
+                                ? 'bg-green-50 border-green-500' 
+                                : 'bg-red-50 border-red-500';
                         }
+                        return isCorrect ? 'bg-green-50 border-green-300' : 'bg-gray-50';
                     }
 
-
-                    // Para selección múltiple
-                    if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
-                        if (isSelected && option.correct) {
-                            return 'bg-green-50 border-green-500';
-                        } else if (isSelected && !option.correct) {
-                            return 'bg-red-50 border-red-500';
-                        } else if (option.correct) {
-                            return 'bg-green-50 border-green-300';
+                    // Para preguntas de opción múltiple o única
+                    if (question.type === 'choice') {
+                        if (isSelected) {
+                            return option.correct 
+                                ? 'bg-green-50 border-green-500' 
+                                : 'bg-red-50 border-red-500';
                         }
+                        return option.correct ? 'bg-green-50 border-green-300' : 'bg-gray-50';
                     }
-
-
-                    // Para selección única
-                    if (currentQuestion.value.type === 'choice' && !currentQuestion.value.multiple) {
-                        if (isSelected && option.correct) {
-                            return 'bg-green-50 border-green-500';
-                        } else if (isSelected && !option.correct) {
-                            return 'bg-red-50 border-red-500';
-                        } else if (option.correct) {
-                            return 'bg-green-50 border-green-300';
-                        }
-                    }
-
 
                     return 'bg-gray-50';
                 }
@@ -556,14 +543,10 @@
                 }
 
                 function submitQuiz() {
-                    // Asegurarse de que la última respuesta se registre
                     if (!quizSubmitted.value) {
                         checkAnswer();
                     }
-                    // Pequeño retraso para permitir que se actualice el estado
-                    setTimeout(() => {
-                        quizCompleted.value = true;
-                    }, 100);
+                    quizCompleted.value = true;
                 }
 
                 function resetQuiz() {
@@ -572,41 +555,20 @@
                     quizSubmitted.value = false;
                     quizCompleted.value = false;
                     showFeedback.value = false;
-                    // Reiniciar el estado de las respuestas correctas
-                    questions.forEach((q, index) => {
-                        userAnswers.value[index] = {};
-                    });
                     // Forzar actualización de la UI
-                    setTimeout(() => {
-                        // Esto asegura que la barra de progreso se actualice
-                        currentQuestionIndex.value = 0;
-                    }, 0);
+                    currentQuestionIndex.value = 0;
                 }
 
-                function isOptionSelected(option, index) {
-                    const currentAnswer = userAnswers.value[currentQuestionIndex.value];
-                    if (!currentAnswer) return false;
-                    
-                    if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
-                        // Para selección múltiple
-                        return Array.isArray(currentAnswer) && 
-                               currentAnswer.some(ans => ans && ans.text === option.text);
-                    } else if (currentQuestion.value.type === 'choice' && !currentQuestion.value.multiple) {
-                        // Para selección única
-                        return currentAnswer && currentAnswer.text === option.text;
-                    } else if (currentQuestion.value.type === 'truefalse') {
-                        // Para verdadero/falso
-                        return currentAnswer === option;
-                    }
-                    return false;
-                }
+
 
                 function isOptionCorrect(option) {
                     if (!quizSubmitted.value) return false;
                     
-                    if (currentQuestion.value.type === 'multiple') {
-                        return option.correct;
+                    if (currentQuestion.value.type === 'choice') {
+                        // Para preguntas de opción múltiple o única
+                        return option.correct === true;
                     } else if (currentQuestion.value.type === 'truefalse') {
+                        // Para preguntas de verdadero/falso
                         return option === currentQuestion.value.correctAnswer;
                     }
                     return false;
@@ -614,6 +576,7 @@
 
                 function getOptionClass(option, index) {
                     const isSelected = isOptionSelected(option, index);
+                    const isCorrect = isOptionCorrect(option);
                     
                     if (!quizSubmitted.value) {
                         // Antes de enviar, resaltar la opción seleccionada
@@ -623,9 +586,14 @@
                     }
                     
                     // Después de enviar, mostrar retroalimentación
-                    if (option.correct) {
+                    if (isCorrect) {
                         // Opción correcta - siempre en verde
-                        return 'bg-green-50 border-green-500';
+                        if (currentQuestion.value.type === 'truefalse' && isSelected) {
+                            return 'bg-green-50 border-green-500';
+                        } else if (currentQuestion.value.type === 'choice') {
+                            return 'bg-green-50 border-green-500';
+                        }
+                        return 'bg-green-50 border-green-300';
                     } else if (isSelected) {
                         // Opción seleccionada pero incorrecta - en rojo
                         return 'bg-red-50 border-red-500';
