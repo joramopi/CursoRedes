@@ -225,12 +225,70 @@
                                     :class="{'bg-green-50 border-green-200': isQuestionCorrect(index), 'bg-red-50 border-red-200': !isQuestionCorrect(index)}">
                                     <p class="font-medium">Pregunta {{ index + 1 }}: {{ isQuestionCorrect(index) ? '✓ Correcta' : '✗ Incorrecta' }}</p>
                                 </div>
+                                
+                                <div class="mt-8 flex justify-center">
+                                    <button @click="resetQuiz" 
+                                            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                        Reiniciar cuestionario
+                                    </button>
+                                </div>
                             </div>
-
-                            <button @click="resetQuiz" 
-                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                <i class="fas fa-redo mr-2"></i>Reintentar
-                            </button>
+                        </div>
+                        
+                        <!-- Resumen de respuestas -->
+                        <div v-else class="mt-8">
+                            <div class="bg-white rounded-lg shadow-md p-6">
+                                <h2 class="text-2xl font-bold mb-6 text-center">Resumen de respuestas</h2>
+                                
+                                <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-lg font-medium">Puntuación final:</span>
+                                        <span class="text-2xl font-bold">
+                                            {{ correctAnswersCount }} / {{ questions.length }} 
+                                            ({{ Math.round((correctAnswersCount / questions.length) * 100) }}%)
+                                        </span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
+                                        <div class="bg-green-500 h-4 rounded-full" 
+                                             :style="{ width: (correctAnswersCount / questions.length) * 100 + '%' }">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <div v-for="(question, index) in questions" :key="index" 
+                                         class="p-4 border rounded-lg"
+                                         :class="isQuestionCorrect(index) ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 mt-1">
+                                                <i v-if="isQuestionCorrect(index)" 
+                                                   class="fas fa-check-circle text-green-500 text-xl"></i>
+                                                <i v-else 
+                                                   class="fas fa-times-circle text-red-500 text-xl"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <h3 class="font-medium">Pregunta {{ index + 1 }}: {{ question.question }}</h3>
+                                                <p v-if="!isQuestionCorrect(index)" class="text-sm text-gray-600 mt-1">
+                                                    <span class="font-medium">Respuesta correcta:</span> 
+                                                    <span v-if="question.type === 'truefalse'">
+                                                        {{ question.correctAnswer }}
+                                                    </span>
+                                                    <span v-else-if="question.type === 'choice' && !question.multiple">
+                                                        {{ question.options.find(opt => opt.correct)?.text }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-8 flex justify-center">
+                                    <button @click="resetQuiz" 
+                                            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                        Reiniciar cuestionario
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </main>
@@ -651,19 +709,41 @@
 
                 function isQuestionCorrect(questionIndex) {
                     const question = questions[questionIndex];
-                    
-                    if (question.type === 'multiple') {
-                        return userAnswers.value[questionIndex]?.correct === true;
+                    const answer = userAnswers.value[questionIndex];
+
+                    if (question.type === 'choice') {
+                        if (question.multiple) {
+                            const selectedOptions = answer || [];
+                            const correctOptions = question.options.filter(opt => opt.correct);
+
+                            const allCorrect = correctOptions.every(opt =>
+                                selectedOptions.some(sel => sel && sel.text === opt.text)
+                            ) && selectedOptions.every(sel =>
+                                correctOptions.some(opt => opt.text === (sel?.text || sel))
+                            );
+
+                            return allCorrect && selectedOptions.length === correctOptions.length;
+                        } else {
+                            return answer?.correct === true;
+                        }
                     } else if (question.type === 'truefalse') {
-                        return userAnswers.value[questionIndex] === question.correctAnswer;
+                        return answer === question.correctAnswer;
                     } else if (question.type === 'matching') {
-                        const answers = userAnswers.value[questionIndex] || {};
-                        return Object.entries(answers).every(([index, answer]) => {
-                            return answer === question.items[index].correct;
-                        });
+                        return Object.entries(answer || {}).every(([index, value]) =>
+                            value === question.items[index].correct
+                        );
                     }
+
                     return false;
                 }
+
+
+                // Contar respuestas correctas
+                const correctAnswersCount = computed(() => {
+                    return questions.reduce((count, _, index) => {
+                        return count + (isQuestionCorrect(index) ? 1 : 0);
+                    }, 0);
+                });
 
                 return {
                     questions,
@@ -690,7 +770,8 @@
                     getOptionBulletClass,
                     isMatchingCorrect,
                     isOptionUsed,
-                    isQuestionCorrect
+                    isQuestionCorrect,
+                    correctAnswersCount
                 };
             }
         }).mount('#app');
