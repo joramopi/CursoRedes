@@ -632,180 +632,93 @@
                         </div>
 
                         <!-- Pestaña de Test de Práctica -->
-                        <div id="test" class="tab-pane hidden flex flex-col" style="min-height: 600px;">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-2xl font-bold text-gray-800">Test de Práctica - Unidad 1</h2>
-                                <button id="reload-test" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center px-3 py-1.5 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
-                                    <i class="fas fa-sync-alt mr-2"></i> Reiniciar Test
-                                </button>
-                            </div>
-                            
-                            <div class="flex-1 flex flex-col bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
-                                <div class="border-b border-gray-200 bg-gray-50 px-4 py-2 flex justify-between items-center">
-                                    <span class="text-sm font-medium text-gray-600">Test de evaluación continua</span>
-                                    <div class="flex space-x-2">
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Sin tiempo límite</span>
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Retroalimentación inmediata</span>
-                                    </div>
+                        <div id="test" class="tab-pane flex flex-col" style="min-height: 600px;">
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+                                <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+                                    <h2 class="text-2xl font-bold text-gray-800">Test de Práctica - Unidad 1</h2>
+                                    <p class="text-gray-600 mt-1">Evalúa tus conocimientos sobre Redes de Computadoras</p>
                                 </div>
-                                <div id="test-content" class="w-full min-h-[600px] bg-white rounded-b-lg overflow-auto p-4">
-                                    <div class="flex items-center justify-center h-full">
-                                        <div class="text-center">
-                                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                                            <p class="mt-4 text-gray-600">Cargando evaluación...</p>
+                                
+                                <div class="p-8 text-center">
+                                    <div class="max-w-2xl mx-auto">
+                                        <div class="bg-blue-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+                                            <i class="fas fa-laptop-code text-4xl text-blue-600"></i>
                                         </div>
-                                    </div>
-                                </div>
-                                <script>
-                                    function loadTestContent() {
-                                        console.log('Cargando contenido del test...');
-                                        const testContent = document.getElementById('test-content');
                                         
-                                        // Mostrar indicador de carga
-                                        testContent.innerHTML = `
-                                            <div class="flex items-center justify-center h-full">
-                                                <div class="text-center">
-                                                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                                                    <p class="mt-4 text-gray-600">Cargando evaluación...</p>
-                                                    <p class="text-xs text-gray-500 mt-2">Si la carga tarda demasiado, asegúrate de usar un servidor web local.</p>
+                                        <h3 class="text-xl font-medium text-gray-900 mb-4">¿Cómo quieres realizar el test?</h3>
+                                        <p class="text-gray-600 mb-8">Para una mejor experiencia, te recomendamos usar un servidor web local.</p>
+                                        
+                                        <div class="grid md:grid-cols-2 gap-6">
+                                            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                                                <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <i class="fas fa-server text-blue-600 text-xl"></i>
                                                 </div>
-                                            </div>`;
-                                        
-                                        // Verificar si estamos en un entorno local (file://)
-                                        if (window.location.protocol === 'file:') {
-                                            // Usar XMLHttpRequest para cargar el archivo local
-                                            const xhr = new XMLHttpRequest();
-                                            xhr.open('GET', 'TestUT1.html', true);
-                                            xhr.onreadystatechange = function() {
-                                                if (xhr.readyState === 4) {
-                                                    if (xhr.status === 0 || xhr.status === 200) {
-                                                        processTestContent(xhr.responseText);
-                                                    } else {
-                                                        showTestError('No se pudo cargar la evaluación. Por favor, usa un servidor web local.');
-                                                    }
-                                                }
-                                            };
-                                            xhr.send(null);
-                                            return;
-                                        }
-                                        
-                                        // Usar fetch si no estamos en un entorno local
-                                        fetch('TestUT1.html')
-                                            .then(response => {
-                                                if (!response.ok) throw new Error('Error en la respuesta del servidor');
-                                                return response.text();
-                                            })
-                                            .then(html => processTestContent(html))
-                                            .catch(error => showTestError('Error al cargar la evaluación: ' + error.message));
-                                    }
-                                    
-                                    function processTestContent(html) {
-                                        console.log('Contenido del test cargado, procesando...');
-                                        const testContent = document.getElementById('test-content');
-                                        
-                                        try {
-                                            // Extraer solo el contenido del body
-                                            const parser = new DOMParser();
-                                            const doc = parser.parseFromString(html, 'text/html');
-                                            const content = doc.body.innerHTML;
+                                                <h4 class="font-medium text-gray-900 mb-2">Usar servidor local (Recomendado)</h4>
+                                                <p class="text-sm text-gray-600 mb-4">Ejecuta un servidor web local para acceder a todas las funcionalidades del test.</p>
+                                                <div class="bg-gray-50 p-3 rounded text-left text-sm text-gray-700 mb-4 font-mono overflow-x-auto">
+                                                    <div class="mb-1">1. Abre una terminal en la carpeta del proyecto</div>
+                                                    <div class="mb-1">2. Ejecuta: <span class="bg-gray-200 px-2 py-0.5 rounded">python -m http.server 8000</span></div>
+                                                    <div>3. Abre <a href="http://localhost:8000/UT1.html" class="text-blue-600 hover:underline">http://localhost:8000/UT1.html</a></div>
+                                                </div>
+                                                <a href="http://localhost:8000/UT1.html" class="inline-block w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                    Ir a localhost:8000
+                                                </a>
+                                            </div>
                                             
-                                            // Insertar el contenido en el contenedor
-                                            testContent.innerHTML = content;
+                                            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                                                <div class="bg-yellow-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <i class="fas fa-file-alt text-yellow-600 text-xl"></i>
+                                                </div>
+                                                <h4 class="font-medium text-gray-900 mb-2">Abrir directamente</h4>
+                                                <p class="text-sm text-gray-600 mb-4">Algunas funcionalidades podrían no estar disponibles al abrir directamente el archivo.</p>
+                                                <a href="TestUT1.html" target="_blank" class="inline-block w-full px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                    <i class="fas fa-external-link-alt mr-2"></i>
+                                                    Abrir TestUT1.html
+                                                </a>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-8 pt-6 border-t border-gray-200">
+                                            <div class="flex items-center justify-center text-sm text-gray-500">
+                                                <i class="fas fa-info-circle mr-2"></i>
+                                                ¿Neitas ayuda? Revisa el archivo README.md para más instrucciones
+                                            </div>
+                            </div>
+                            <script>
+                                // Código de inicialización de pestañas
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    // Manejador para cambiar entre pestañas
+                                    const tabButtons = document.querySelectorAll('[data-tab]');
+                                    tabButtons.forEach(button => {
+                                        button.addEventListener('click', function() {
+                                            const tabId = this.getAttribute('data-tab');
                                             
-                                            // Ejecutar cualquier script que venga en el contenido
-                                            const scripts = testContent.getElementsByTagName('script');
-                                            for (let i = 0; i < scripts.length; i++) {
-                                                const script = document.createElement('script');
-                                                if (scripts[i].src) {
-                                                    script.src = scripts[i].src;
-                                                } else {
-                                                    script.textContent = scripts[i].textContent;
-                                                }
-                                                document.body.appendChild(script).parentNode.removeChild(script);
+                                            // Ocultar todos los contenidos de pestañas
+                                            document.querySelectorAll('.tab-pane').forEach(pane => {
+                                                pane.classList.add('hidden');
+                                            });
+                                            
+                                            // Mostrar la pestaña seleccionada
+                                            const activePane = document.getElementById(tabId);
+                                            if (activePane) {
+                                                activePane.classList.remove('hidden');
                                             }
                                             
-                                            console.log('Contenido del test procesado correctamente');
-                                        } catch (error) {
-                                            console.error('Error al procesar el contenido:', error);
-                                            showTestError('Error al procesar el contenido de la evaluación: ' + error.message);
-                                        }
-                                    }
-                                    
-                                    function showTestError(message) {
-                                        console.error(message);
-                                        const testContent = document.getElementById('test-content');
-                                        testContent.innerHTML = `
-                                            <div class="bg-red-50 border-l-4 border-red-500 p-4">
-                                                <div class="flex">
-                                                    <div class="flex-shrink-0">
-                                                        <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                                        </svg>
-                                                    </div>
-                                                    <div class="ml-3">
-                                                        <p class="text-sm text-red-700">
-                                                            ${message || 'No se pudo cargar la evaluación. Por favor, recarga la página o inténtalo de nuevo más tarde.'}
-                                                        </p>
-                                                        <p class="text-xs text-red-600 mt-2">
-                                                            <strong>Solución:</strong> Abre la página usando un servidor web local. Si usas VS Code, instala la extensión "Live Server" y haz clic derecho en el archivo > "Open with Live Server"
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>`;
-                                    }
-                                    
-                                    // Cargar el contenido cuando el DOM esté listo
-                                    document.addEventListener('DOMContentLoaded', function() {
-                                        // Cargar cuando se muestre la pestaña
-                                        const testTab = document.querySelector('[data-tab="test"]');
-                                        if (testTab) {
-                                            testTab.addEventListener('click', loadTestContent);
-                                        }
-                                        
-                                        // Cargar también si ya está activa la pestaña
-                                        if (document.getElementById('test') && !document.getElementById('test').classList.contains('hidden')) {
-                                            loadTestContent();
-                                        }
+                                            // Actualizar botones activos
+                                            tabButtons.forEach(btn => {
+                                                btn.classList.remove('border-blue-500', 'text-blue-600');
+                                                btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                                            });
+                                            
+                                            this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                                            this.classList.add('border-blue-500', 'text-blue-600');
+                                        });
                                     });
-                                </script>
-                            </div>
-                            
-                            <style>
-                                /* Asegura que el iframe herede los estilos de fuente */
-                                #test-iframe {
-                                    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                                    min-height: 600px;
-                                }
-                                /* Estilo para el botón de reinicio */
-                                #reload-test:hover {
-                                    transform: rotate(180deg);
-                                    transition: transform 0.3s ease, background-color 0.2s ease;
-                                }
-                                /* Asegura que el contenedor principal ocupe todo el espacio disponible */
-                                #contenido-unidad {
-                                    display: flex;
-                                    flex-direction: column;
-                                    height: 100%;
-                                }
-                                .tab-pane {
-                                    flex: 1;
-                                    display: flex;
-                                    flex-direction: column;
-                                    min-height: 0; /* Permite que el contenedor se encoja */
-                                }
-                            </style>
-                            
-                            <script>
-                                // Script para manejar el reinicio del test
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    const reloadBtn = document.getElementById('reload-test');
-                                    const testIframe = document.getElementById('test-iframe');
                                     
-                                    reloadBtn.addEventListener('click', function() {
-                                        if (confirm('¿Estás seguro de que deseas reiniciar el test? Se perderán todas tus respuestas.')) {
-                                            testIframe.contentWindow.location.reload();
-                                        }
-                                    });
+                                    // Activar la primera pestaña por defecto
+                                    if (tabButtons.length > 0) {
+                                        tabButtons[0].click();
+                                    }
                                 });
                             </script>
                         </div>
@@ -820,7 +733,7 @@
     <footer class="bg-gray-50 border-t border-gray-200">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <p class="text-center text-gray-500 text-sm">
-                © 2025 Escuela Superior Politécnica Agropecuaria de Manabí Manuel Félix López<br>
+                2025 Escuela Superior Politécnica Agropecuaria de Manabí Manuel Félix López<br>
                 Carrera de Computación - Mgtr. Joffre Moreira Pico
             </p>
         </div>

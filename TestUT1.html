@@ -14,97 +14,156 @@
             opacity: 0;
         }
         .option-selected {
-            @apply bg-blue-100 border-blue-500;
+            border: 2px solid #3b82f6;
+            background-color: #dbeafe;
         }
         .correct-answer {
-            @apply bg-green-100 border-green-500;
+            border: 2px solid #10b981;
+            background-color: #d1fae5;
         }
         .wrong-answer {
-            @apply bg-red-100 border-red-500;
+            border: 2px solid #ef4444;
+            background-color: #fee2e2;
         }
     </style>
 </head>
 <body class="bg-gray-50">
-    <div id="app" class="min-h-screen">
-        <!-- Header -->
-        <header class="bg-blue-600 text-white shadow-md">
-            <div class="container mx-auto px-4 py-6">
-                <h1 class="text-2xl md:text-3xl font-bold">Evaluación Interactiva</h1>
-                <p class="text-blue-100">Unidad 1: Introducción a las Redes de Computadoras</p>
-                
-                <!-- Progress Bar -->
-                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
-                    <div class="bg-blue-400 h-2.5 rounded-full transition-all duration-300" 
-                         :style="{width: (currentQuestionIndex / questions.length * 100) + '%'}"></div>
+    <div id="app" class="flex flex-col lg:flex-row">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar w-full lg:w-64 text-white p-4 bg-blue-900">
+            <div class="flex items-center justify-center lg:justify-start mb-8 pt-2">
+                <div class="bg-white p-2 rounded-full">
+                    <i class="fas fa-network-wired text-2xl text-blue-900"></i>
                 </div>
-                <div class="flex justify-between text-sm mt-2">
-                    <span>Pregunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}</span>
-                    <span>{{ Math.round((currentQuestionIndex / questions.length) * 100) }}% Completado</span>
-                </div>
+                <h1 class="text-xl ml-3 font-bold">CC-0601</h1>
             </div>
-        </header>
+            
+            <nav>
+                <div class="mb-4 text-sm text-gray-300 uppercase tracking-wider pl-4">Navegación</div>
+                <a href="index.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1 bg-blue-700">
+                    <i class="fas fa-home mr-3"></i>
+                    <span>Volver al Inicio</span>
+                </a>
+                <a href="UT1.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-arrow-left mr-3"></i>
+                    <span>Volver a la Unidad 1</span>
+                </a>
+                
+                <div class="mt-8 pt-4 border-t border-blue-800">
+                    <div class="text-sm text-gray-400 mb-2">Otras evaluaciones:</div>
+                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg mb-1 flex items-center">
+                        <i class="fas fa-tasks mr-2 w-4 text-center"></i>
+                        Test Unidad 2
+                    </a>
+                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg mb-1 flex items-center">
+                        <i class="fas fa-tasks mr-2 w-4 text-center"></i>
+                        Test Unidad 3
+                    </a>
+                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg flex items-center">
+                        <i class="fas fa-tasks mr-2 w-4 text-center"></i>
+                        Test Unidad 4
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 min-h-screen flex flex-col">
+            <!-- Header -->
+            <header class="bg-blue-600 text-white shadow-md">
+                <div class="container mx-auto px-4 py-6">
+                    <h1 class="text-2xl md:text-3xl font-bold">Evaluación Interactiva</h1>
+                    <p class="text-blue-100">Unidad 1: Introducción a las Redes de Computadoras</p>
+            
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                        <div class="bg-blue-400 h-2.5 rounded-full transition-all duration-300" 
+                             :style="{width: ((currentQuestionIndex + 1) / questions.length * 100) + '%'}"></div>
+                    </div>
+                    <div class="flex justify-between text-sm mt-2">
+                        <span>Pregunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}</span>
+                        <span>{{ Math.round(((currentQuestionIndex + 1) / questions.length) * 100) }}% Completado</span>
+                    </div>
+                </div>
+            </header>
 
-        <!-- Main Content -->
-        <main class="container mx-auto px-4 py-8">
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <!-- Question -->
-                <div v-if="!quizCompleted" class="question-container">
-                    <h2 class="text-xl font-semibold mb-6">{{ currentQuestion.question }}</h2>
+                <!-- Main Content -->
+                <main class="container mx-auto px-4 py-8">
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                        <!-- Question -->
+                        <div v-if="!quizCompleted" class="question-container">
+                            <h2 class="text-xl font-semibold mb-6">{{ currentQuestion.question }}</h2>
                     
-                    <!-- Multiple Choice -->
-                    <div v-if="currentQuestion.type === 'multiple'" class="space-y-3">
-                        <div v-for="(option, index) in currentQuestion.options" :key="index"
-                             @click="selectAnswer(option)"
-                             class="p-4 border rounded-lg cursor-pointer transition-colors"
-                             :class="getOptionClass(option)">
-                            <div class="flex items-center">
-                                <div class="w-6 h-6 rounded-full border flex items-center justify-center mr-3 flex-shrink-0"
-                                     :class="getOptionBulletClass(option)">
-                                    <span v-if="isOptionSelected(option)" class="text-xs">
-                                        {{ isOptionCorrect(option) ? '✓' : '✗' }}
-                                    </span>
+                            <!-- Multiple Choice -->
+                            <div v-if="currentQuestion.type === 'choice'" class="space-y-3">
+                                <div v-for="(option, index) in currentQuestion.options" :key="index"
+                                    class="p-4 border rounded-lg cursor-pointer transition-colors"
+                                    :class="getOptionClass(option, index)">
+                                    <label class="flex items-center cursor-pointer">
+                                        <!-- Checkbox para múltiple selección -->
+                                        <div v-if="currentQuestion.multiple" class="flex items-center">
+                                            <input type="checkbox" 
+                                                :checked="isOptionSelected(option, index)"
+                                                @change="toggleOption(option, $event)"
+                                                class="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                                            <span class="ml-3">{{ option.text }}</span>
+                                        </div>
+                                        <!-- Radio button para selección única -->
+                                        <div v-else class="flex items-center">
+                                            <input type="radio" 
+                                                :checked="isOptionSelected(option, index)"
+                                                @change="selectSingleOption(option, $event)"
+                                                :name="'question-' + currentQuestionIndex"
+                                                class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                            <span class="ml-3">{{ option.text }}</span>
+                                        </div>
+                                    </label>
                                 </div>
-                                <span>{{ option.text }}</span>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- True/False -->
-                    <div v-else-if="currentQuestion.type === 'truefalse'" class="space-y-3">
-                        <div v-for="option in ['Verdadero', 'Falso']" :key="option"
-                             @click="selectAnswer(option)"
-                             class="p-4 border rounded-lg cursor-pointer transition-colors"
-                             :class="getOptionClass(option)">
-                            <div class="flex items-center">
-                                <div class="w-6 h-6 rounded-full border flex items-center justify-center mr-3 flex-shrink-0"
-                                     :class="getOptionBulletClass(option)">
-                                    <span v-if="isOptionSelected(option)" class="text-xs">
-                                        {{ isOptionCorrect(option) ? '✓' : '✗' }}
-                                    </span>
+                            <!-- True/False -->
+                            <div v-else-if="currentQuestion.type === 'truefalse'" class="space-y-3">
+                                <div v-for="option in ['Verdadero', 'Falso']" :key="option"
+                                    @click="selectSingleOption(option)"
+                                    class="p-4 border rounded-lg cursor-pointer transition-colors"
+                                    :class="getOptionClass(option)">
+                                    <div class="flex items-center">
+                                        <div class="w-6 h-6 rounded-full border flex items-center justify-center mr-3 flex-shrink-0"
+                                            :class="{
+                                                'border-green-500': isOptionSelected(option) && isOptionCorrect(option),
+                                                'border-red-500': isOptionSelected(option) && !isOptionCorrect(option),
+                                                'border-gray-300': !isOptionSelected(option)
+                                            }">
+                                            <div v-if="isOptionSelected(option)" 
+                                                class="w-3 h-3 rounded-full"
+                                                :class="{
+                                                    'bg-green-500': isOptionCorrect(option),
+                                                    'bg-red-500': !isOptionCorrect(option)
+                                                }"></div>
+                                        </div>
+                                        <span>{{ option }}</span>
+                                    </div>
                                 </div>
-                                <span>{{ option }}</span>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- Matching -->
-                    <div v-else-if="currentQuestion.type === 'matching'" class="space-y-4">
-                        <div v-for="(item, index) in currentQuestion.items" :key="index" class="flex items-center">
-                            <span class="w-1/3 font-medium">{{ item.term }}</span>
-                            <select v-model="userAnswers[currentQuestionIndex][index]" 
-                                    class="flex-1 ml-4 p-2 border rounded"
-                                    :class="{'bg-green-50 border-green-500': isMatchingCorrect(index)}"
-                                    :disabled="quizSubmitted">
-                                <option value="">Selecciona una opción</option>
-                                <option v-for="(option, optIndex) in currentQuestion.options" 
-                                        :key="optIndex" 
-                                        :value="option"
-                                        :disabled="isOptionUsed(option, index)">
-                                    {{ option }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
+                            <!-- Matching -->
+                            <div v-else-if="currentQuestion.type === 'matching'" class="space-y-4">
+                                <div v-for="(item, index) in currentQuestion.items" :key="index" class="flex items-center">
+                                    <span class="w-1/3 font-medium">{{ item.term }}</span>
+                                    <select v-model="userAnswers[currentQuestionIndex][index]" 
+                                            class="flex-1 ml-4 p-2 border rounded"
+                                            :class="{'bg-green-50 border-green-500': isMatchingCorrect(index)}"
+                                            :disabled="quizSubmitted">
+                                        <option value="">Selecciona una opción</option>
+                                        <option v-for="(option, optIndex) in currentQuestion.options" 
+                                                :key="optIndex" 
+                                                :value="option"
+                                                :disabled="isOptionUsed(option, index)">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
 
                     <!-- Feedback -->
                     <div v-if="showFeedback" class="mt-6 p-4 rounded-lg" 
@@ -138,51 +197,52 @@
                             Finalizar<i class="fas fa-check ml-2"></i>
                         </button>
                     </div>
-                </div>
-
-                <!-- Results -->
-                <div v-else class="text-center py-8">
-                    <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-trophy text-4xl text-yellow-500"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold mb-2">¡Evaluación Completada!</h2>
-                    <p class="text-gray-600 mb-6">Has completado la evaluación de la Unidad 1</p>
-                    
-                    <div class="bg-blue-50 p-6 rounded-lg max-w-md mx-auto mb-8">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">{{ score }}%</div>
-                        <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
-                            <div class="bg-blue-600 h-4 rounded-full" 
-                                 :style="{width: score + '%'}"></div>
                         </div>
-                        <p class="text-sm text-gray-600">
-                            {{ correctAnswers }} de {{ questions.length }} respuestas correctas
-                        </p>
-                    </div>
 
-                    <div class="space-y-4 max-w-md mx-auto text-left mb-8">
-                        <h3 class="font-semibold text-lg">Resumen de respuestas:</h3>
-                        <div v-for="(question, index) in questions" :key="index"
-                             class="p-3 border rounded-lg"
-                             :class="{'bg-green-50 border-green-200': isQuestionCorrect(index), 'bg-red-50 border-red-200': !isQuestionCorrect(index)}">
-                            <p class="font-medium">Pregunta {{ index + 1 }}: {{ isQuestionCorrect(index) ? '✓ Correcta' : '✗ Incorrecta' }}</p>
+                        <!-- Results -->
+                        <div v-else class="text-center py-8">
+                            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-trophy text-4xl text-yellow-500"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold mb-2">¡Evaluación Completada!</h2>
+                            <p class="text-gray-600 mb-6">Has completado la evaluación de la Unidad 1</p>
+                            
+                            <div class="bg-blue-50 p-6 rounded-lg max-w-md mx-auto mb-8">
+                                <div class="text-4xl font-bold text-blue-600 mb-2">{{ score }}%</div>
+                                <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                                    <div class="bg-blue-600 h-4 rounded-full" 
+                                        :style="{width: score + '%'}"></div>
+                                </div>
+                                <p class="text-sm text-gray-600">
+                                    {{ correctAnswers }} de {{ questions.length }} respuestas correctas
+                                </p>
+                            </div>
+
+                            <div class="space-y-4 max-w-md mx-auto text-left mb-8">
+                                <h3 class="font-semibold text-lg">Resumen de respuestas:</h3>
+                                <div v-for="(question, index) in questions" :key="index"
+                                    class="p-3 border rounded-lg"
+                                    :class="{'bg-green-50 border-green-200': isQuestionCorrect(index), 'bg-red-50 border-red-200': !isQuestionCorrect(index)}">
+                                    <p class="font-medium">Pregunta {{ index + 1 }}: {{ isQuestionCorrect(index) ? '✓ Correcta' : '✗ Incorrecta' }}</p>
+                                </div>
+                            </div>
+
+                            <button @click="resetQuiz" 
+                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-redo mr-2"></i>Reintentar
+                            </button>
                         </div>
                     </div>
+                </main>
 
-                    <button @click="resetQuiz" 
-                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-redo mr-2"></i>Reintentar
-                    </button>
-                </div>
+                <!-- Footer -->
+                <footer class="bg-gray-800 text-white py-6">
+                    <div class="container mx-auto px-4 text-center">
+                        <p>© 2025 Escuela Superior Politécnica Agropecuaria de Manabí Manuel Félix López</p>
+                        <p class="text-gray-400 text-sm mt-1">Carrera de Computación - Mgtr. Joffre Moreira Pico</p>
+                    </div>
+                </footer>
             </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white py-6">
-            <div class="container mx-auto px-4 text-center">
-                <p>© 2023 Curso de Redes de Computadoras</p>
-                <p class="text-gray-400 text-sm mt-2">Instituto Tecnológico de Estudios Superiores de los Ríos</p>
-            </div>
-        </footer>
     </div>
 
     <!-- Cargar Vue.js localmente -->
@@ -190,43 +250,107 @@
     <script>
         const { createApp, ref, computed, onMounted } = Vue;
 
-        createApp({
+        // Crear la aplicación Vue
+        const app = createApp({
             setup() {
                 // Questions data
                 const questions = [
                     {
-                        type: 'multiple',
-                        question: '¿Cuál de los siguientes NO es un tipo de red según su alcance?',
+                        type: 'choice',
+                        multiple: false,
+                        question: '¿Qué es una red de computadoras?',
                         options: [
-                            { text: 'LAN', correct: false },
-                            { text: 'WAN', correct: false },
-                            { text: 'VPN', correct: true },
-                            { text: 'MAN', correct: false }
+                            { text: 'Un software de diseño gráfico', correct: false },
+                            { text: 'Una conexión de dispositivos para compartir información y recursos', correct: true },
+                            { text: 'Un tipo de archivo multimedia', correct: false },
+                            { text: 'Un lenguaje de programación', correct: false }
                         ],
-                        explanation: 'VPN (Red Privada Virtual) no es un tipo de red según su alcance, sino una tecnología que permite extender una red privada sobre una red pública.'
+                        explanation: 'Una red conecta dispositivos para permitir la comunicación entre ellos.'
                     },
                     {
                         type: 'truefalse',
-                        question: 'El modelo OSI tiene 7 capas.',
-                        correctAnswer: 'Verdadero',
-                        explanation: 'Correcto. El modelo OSI (Interconexión de Sistemas Abiertos) tiene 7 capas: Física, Enlace de Datos, Red, Transporte, Sesión, Presentación y Aplicación.'
+                        question: 'Las redes WAN son redes de área pequeña.',
+                        correctAnswer: 'Falso',
+                        explanation: 'Las WAN (Wide Area Network) abarcan grandes extensiones geográficas.'
+                    },
+                    {
+                        type: 'choice',
+                        multiple: true,
+                        question: '¿Cuáles de los siguientes elementos son componentes de una red?',
+                        options: [
+                            { text: 'Computadoras', correct: true },
+                            { text: 'Switches', correct: true },
+                            { text: 'Lámparas', correct: false },
+                            { text: 'Cables Ethernet', correct: true }
+                        ],
+                        explanation: 'Los dispositivos, medios de transmisión y dispositivos de red conforman una red.'
                     },
                     {
                         type: 'matching',
-                        question: 'Relaciona cada capa del modelo OSI con su función principal:',
+                        question: 'Relacione cada capa del modelo OSI con su función principal.',
                         items: [
-                            { term: 'Capa Física', correct: 'Transmisión de bits' },
-                            { term: 'Capa de Red', correct: 'Enrutamiento de paquetes' },
-                            { term: 'Capa de Transporte', correct: 'Control de flujo' },
-                            { term: 'Capa de Aplicación', correct: 'Interfaz con el usuario' }
+                            { term: 'Física', correct: 'Transmisión de bits' },
+                            { term: 'Transporte', correct: 'Entrega fiable de datos' },
+                            { term: 'Red', correct: 'Direccionamiento IP' },
+                            { term: 'Aplicación', correct: 'Interacción del usuario con la red' }
                         ],
                         options: [
                             'Transmisión de bits',
-                            'Enrutamiento de paquetes',
-                            'Control de flujo',
-                            'Interfaz con el usuario'
-                        ]
-                    }
+                            'Entrega fiable de datos',
+                            'Direccionamiento IP',
+                            'Interacción del usuario con la red'
+                        ],
+                        explanation: 'Cada capa del modelo OSI cumple una función específica dentro del proceso de comunicación.'
+                    },
+                    {
+                        type: 'truefalse',
+                        question: 'La capa de sesión del modelo OSI es la responsable de iniciar y mantener una comunicación.',
+                        correctAnswer: 'Verdadero',
+                        explanation: 'Esta capa establece y gestiona sesiones entre aplicaciones.'
+                    },
+                    {
+                        type: 'choice',
+                        multiple: false,
+                        question: '¿Cuál es el protocolo principal de la capa de red del modelo TCP/IP?',
+                        options: [
+                            { text: 'HTTP', correct: false },
+                            { text: 'IP', correct: true },
+                            { text: 'FTP', correct: false },
+                            { text: 'TCP', correct: false }
+                        ],
+                        explanation: 'La capa Internet usa el protocolo IP para direccionamiento y enrutamiento.'
+                    },
+                    {
+                        type: 'choice',
+                        multiple: true,
+                        question: 'Selecciona capas del modelo OSI que no tienen correspondencia directa en TCP/IP.',
+                        options: [
+                            { text: 'Presentación', correct: true },
+                            { text: 'Sesión', correct: true },
+                            { text: 'Red', correct: false },
+                            { text: 'Aplicación', correct: false }
+                        ],
+                        explanation: 'Las capas Sesión y Presentación están integradas en la capa de Aplicación del TCP/IP.'
+                    },
+                    {
+                        type: 'choice',
+                        multiple: false,
+                        question: 'El modelo TCP/IP tiene cuántas capas:',
+                        options: [
+                            { text: '7', correct: false },
+                            { text: '5', correct: false },
+                            { text: '4', correct: true },
+                            { text: '3', correct: false }
+                        ],
+                        explanation: 'El modelo TCP/IP posee 4 capas principales: Aplicación, Transporte, Internet y Acceso a la red.'
+                    },
+                    {
+                        type: 'truefalse',
+                        question: 'En el encapsulamiento, el tráiler se añade en la capa de red.',
+                        correctAnswer: 'Falso',
+                        explanation: 'El tráiler se añade en la capa de enlace de datos.'
+                    },
+
                 ];
 
                 // State
@@ -238,13 +362,21 @@
                 const isAnswerCorrect = ref(false);
 
                 // Computed
-                const currentQuestion = computed(() => questions[currentQuestionIndex.value]);
+                const currentQuestion = computed(() => {
+                    // Inicializar respuestas cuando cambia la pregunta
+                    setTimeout(() => {
+                        initializeUserAnswers();
+                    }, 0);
+                    return questions[currentQuestionIndex.value];
+                });
+                
                 const isLastQuestion = computed(() => currentQuestionIndex.value === questions.length - 1);
                 const isAnswerSelected = computed(() => {
                     if (currentQuestion.value.type === 'matching') {
-                        return Object.keys(userAnswers.value[currentQuestionIndex.value]).length > 0;
+                        return Object.keys(userAnswers.value[currentQuestionIndex.value] || {}).length > 0;
                     }
-                    return userAnswers.value[currentQuestionIndex.value] !== undefined;
+                    return userAnswers.value[currentQuestionIndex.value] !== undefined && 
+                           userAnswers.value[currentQuestionIndex.value] !== null;
                 });
 
                 const correctAnswers = computed(() => {
@@ -257,27 +389,148 @@
                     return Math.round((correctAnswers.value / questions.length) * 100);
                 });
 
+                // Lifecycle Hooks
+                onMounted(() => {
+                    initializeUserAnswers();
+                });
+
                 // Methods
-                function selectAnswer(answer) {
+                function initializeUserAnswers() {
+                    if (!userAnswers.value[currentQuestionIndex.value]) {
+                        if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
+                            userAnswers.value[currentQuestionIndex.value] = [];
+                        } else if (currentQuestion.value.type === 'matching') {
+                            userAnswers.value[currentQuestionIndex.value] = {};
+                        } else {
+                            userAnswers.value[currentQuestionIndex.value] = null;
+                        }
+                    }
+                }
+                
+                function isMatchingCorrect(index) {
+                    if (!quizSubmitted.value) return false;
+                    const userAnswer = userAnswers.value[currentQuestionIndex.value]?.[index];
+                    if (userAnswer === undefined) return false;
+                    return userAnswer === currentQuestion.value.items[index].correct;
+                }
+                
+                function isOptionUsed(option, currentIndex) {
+                    if (!quizSubmitted.value) return false;
+                    return Object.entries(userAnswers.value[currentQuestionIndex.value] || {})
+                        .some(([idx, ans]) => parseInt(idx) !== currentIndex && ans === option);
+                }
+
+                function isOptionSelected(option, index) {
+                    const currentAnswer = userAnswers.value[currentQuestionIndex.value];
+                    if (!currentAnswer) return false;
+                    
+                    if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
+                        return Array.isArray(currentAnswer) && currentAnswer.some(ans => ans && ans.text === option.text);
+                    } else if (currentQuestion.value.type === 'choice' && !currentQuestion.value.multiple) {
+                        return currentAnswer && currentAnswer.text === option.text;
+                    } else if (currentQuestion.value.type === 'truefalse') {
+                        return currentAnswer === option;
+                    } else if (currentQuestion.value.type === 'matching' && index !== undefined) {
+                        return currentAnswer[index] !== undefined;
+                    }
+                    return false;
+                }
+
+                function getOptionClass(option, index) {
+                    const isSelected = isOptionSelected(option, index);
+
+                    if (!quizSubmitted.value) {
+                        // Antes de enviar, resaltar la opción seleccionada
+                        return isSelected 
+                            ? 'bg-blue-50 border-blue-300' 
+                            : 'hover:bg-gray-50';
+                    }
+
+
+                    // Para preguntas de verdadero/falso
+                    if (currentQuestion.value.type === 'truefalse') {
+                        if (isOptionSelected(option) && isOptionCorrect(option)) {
+                            return 'bg-green-50 border-green-500';
+                        } else if (isOptionSelected(option) && !isOptionCorrect(option)) {
+                            return 'bg-red-50 border-red-500';
+                        } else if (isOptionCorrect(option)) {
+                            return 'bg-green-50 border-green-300';
+                        }
+                    }
+
+
+                    // Para selección múltiple
+                    if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
+                        if (isSelected && option.correct) {
+                            return 'bg-green-50 border-green-500';
+                        } else if (isSelected && !option.correct) {
+                            return 'bg-red-50 border-red-500';
+                        } else if (option.correct) {
+                            return 'bg-green-50 border-green-300';
+                        }
+                    }
+
+
+                    // Para selección única
+                    if (currentQuestion.value.type === 'choice' && !currentQuestion.value.multiple) {
+                        if (isSelected && option.correct) {
+                            return 'bg-green-50 border-green-500';
+                        } else if (isSelected && !option.correct) {
+                            return 'bg-red-50 border-red-500';
+                        } else if (option.correct) {
+                            return 'bg-green-50 border-green-300';
+                        }
+                    }
+
+
+                    return 'bg-gray-50';
+                }
+
+                function toggleOption(option, event) {
                     if (quizSubmitted.value) return;
                     
-                    if (currentQuestion.value.type === 'multiple') {
-                        userAnswers.value[currentQuestionIndex.value] = answer;
-                    } else if (currentQuestion.value.type === 'truefalse') {
-                        userAnswers.value[currentQuestionIndex.value] = answer;
+                    const currentAnswer = userAnswers.value[currentQuestionIndex.value] || [];
+                    const optionIndex = currentAnswer.findIndex(ans => ans.text === option.text);
+                    
+                    if (optionIndex === -1) {
+                        // Agregar la opción si no está seleccionada
+                        userAnswers.value[currentQuestionIndex.value] = [...currentAnswer, option];
+                    } else {
+                        // Quitar la opción si ya está seleccionada
+                        const newAnswers = [...currentAnswer];
+                        newAnswers.splice(optionIndex, 1);
+                        userAnswers.value[currentQuestionIndex.value] = newAnswers;
                     }
                     
                     checkAnswer();
                 }
 
+                function selectSingleOption(option, event) {
+                    if (quizSubmitted.value) return;
+                    userAnswers.value[currentQuestionIndex.value] = option;
+                    checkAnswer();
+                }
+
                 function checkAnswer() {
-                    if (currentQuestion.value.type === 'multiple') {
+                    if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
+                        const selectedOptions = userAnswers.value[currentQuestionIndex.value] || [];
+                        const correctOptions = currentQuestion.value.options.filter(opt => opt.correct);
+                        
+                        // Verificar que se hayan seleccionado todas las opciones correctas y ninguna incorrecta
+                        const allCorrect = correctOptions.every(opt => 
+                            selectedOptions.some(sel => sel.text === opt.text)
+                        ) && selectedOptions.every(sel => 
+                            correctOptions.some(opt => opt.text === sel.text)
+                        );
+                        
+                        isAnswerCorrect.value = allCorrect && selectedOptions.length === correctOptions.length;
+                    } else if (currentQuestion.value.type === 'choice' && !currentQuestion.value.multiple) {
                         isAnswerCorrect.value = userAnswers.value[currentQuestionIndex.value]?.correct === true;
                     } else if (currentQuestion.value.type === 'truefalse') {
                         isAnswerCorrect.value = userAnswers.value[currentQuestionIndex.value] === currentQuestion.value.correctAnswer;
                     } else if (currentQuestion.value.type === 'matching') {
                         const currentAnswers = userAnswers.value[currentQuestionIndex.value];
-                        isAnswerCorrect.value = Object.entries(currentAnswers).every(([index, answer]) => {
+                        isAnswerCorrect.value = Object.entries(currentAnswers || {}).every(([index, answer]) => {
                             return answer === currentQuestion.value.items[index].correct;
                         });
                     }
@@ -303,7 +556,14 @@
                 }
 
                 function submitQuiz() {
-                    quizCompleted.value = true;
+                    // Asegurarse de que la última respuesta se registre
+                    if (!quizSubmitted.value) {
+                        checkAnswer();
+                    }
+                    // Pequeño retraso para permitir que se actualice el estado
+                    setTimeout(() => {
+                        quizCompleted.value = true;
+                    }, 100);
                 }
 
                 function resetQuiz() {
@@ -312,13 +572,31 @@
                     quizSubmitted.value = false;
                     quizCompleted.value = false;
                     showFeedback.value = false;
+                    // Reiniciar el estado de las respuestas correctas
+                    questions.forEach((q, index) => {
+                        userAnswers.value[index] = {};
+                    });
+                    // Forzar actualización de la UI
+                    setTimeout(() => {
+                        // Esto asegura que la barra de progreso se actualice
+                        currentQuestionIndex.value = 0;
+                    }, 0);
                 }
 
-                function isOptionSelected(option) {
-                    if (currentQuestion.value.type === 'multiple') {
-                        return userAnswers.value[currentQuestionIndex.value] === option;
+                function isOptionSelected(option, index) {
+                    const currentAnswer = userAnswers.value[currentQuestionIndex.value];
+                    if (!currentAnswer) return false;
+                    
+                    if (currentQuestion.value.type === 'choice' && currentQuestion.value.multiple) {
+                        // Para selección múltiple
+                        return Array.isArray(currentAnswer) && 
+                               currentAnswer.some(ans => ans && ans.text === option.text);
+                    } else if (currentQuestion.value.type === 'choice' && !currentQuestion.value.multiple) {
+                        // Para selección única
+                        return currentAnswer && currentAnswer.text === option.text;
                     } else if (currentQuestion.value.type === 'truefalse') {
-                        return userAnswers.value[currentQuestionIndex.value] === option;
+                        // Para verdadero/falso
+                        return currentAnswer === option;
                     }
                     return false;
                 }
@@ -334,28 +612,38 @@
                     return false;
                 }
 
-                function getOptionClass(option) {
+                function getOptionClass(option, index) {
+                    const isSelected = isOptionSelected(option, index);
+                    
                     if (!quizSubmitted.value) {
-                        return isOptionSelected(option) ? 'option-selected border-2' : 'hover:bg-gray-50';
+                        // Antes de enviar, resaltar la opción seleccionada
+                        return isSelected 
+                            ? 'bg-blue-50 border-blue-300' 
+                            : 'hover:bg-gray-50';
                     }
                     
-                    if (isOptionCorrect(option)) {
-                        return 'correct-answer border-2';
-                    } else if (isOptionSelected(option) && !isOptionCorrect(option)) {
-                        return 'wrong-answer border-2';
+                    // Después de enviar, mostrar retroalimentación
+                    if (option.correct) {
+                        // Opción correcta - siempre en verde
+                        return 'bg-green-50 border-green-500';
+                    } else if (isSelected) {
+                        // Opción seleccionada pero incorrecta - en rojo
+                        return 'bg-red-50 border-red-500';
                     }
-                    return 'opacity-70';
+                    
+                    // Opción no seleccionada y no es correcta
+                    return 'bg-gray-50';
                 }
 
-                function getOptionBulletClass(option) {
-                    if (!quizSubmitted.value) {
-                        return isOptionSelected(option) ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-400';
-                    }
+                function getOptionBulletClass(option, index) {
+                    if (!quizSubmitted.value) return 'border-gray-300';
                     
-                    if (isOptionCorrect(option)) {
-                        return 'border-green-500 bg-green-500 text-white';
-                    } else if (isOptionSelected(option) && !isOptionCorrect(option)) {
-                        return 'border-red-500 bg-red-500 text-white';
+                    const isSelected = isOptionSelected(option, index);
+                    
+                    if (option.correct) {
+                        return isSelected ? 'bg-green-100 border-green-500' : 'bg-green-50 border-green-300';
+                    } else if (isSelected && !option.correct) {
+                        return 'bg-red-100 border-red-500';
                     }
                     return 'border-gray-300';
                 }
@@ -366,6 +654,25 @@
                     return answer === currentQuestion.value.items[index].correct;
                 }
 
+                function toggleOption(option, event) {
+                    if (quizSubmitted.value) return;
+                    
+                    const currentAnswer = userAnswers.value[currentQuestionIndex.value] || [];
+                    const optionIndex = currentAnswer.findIndex(ans => ans && ans.text === option.text);
+                    
+                    if (optionIndex === -1) {
+                        // Agregar la opción si no está seleccionada
+                        userAnswers.value[currentQuestionIndex.value] = [...currentAnswer, option];
+                    } else {
+                        // Quitar la opción si ya está seleccionada
+                        const newAnswers = [...currentAnswer];
+                        newAnswers.splice(optionIndex, 1);
+                        userAnswers.value[currentQuestionIndex.value] = newAnswers;
+                    }
+                    
+                    checkAnswer();
+                }
+                
                 function isOptionUsed(option, currentIndex) {
                     if (!quizSubmitted.value) {
                         const currentAnswers = Object.values(userAnswers.value[currentQuestionIndex.value] || {});
@@ -403,7 +710,8 @@
                     isAnswerSelected,
                     correctAnswers,
                     score,
-                    selectAnswer,
+                    toggleOption,
+                    selectSingleOption,
                     nextQuestion,
                     previousQuestion,
                     submitQuiz,
