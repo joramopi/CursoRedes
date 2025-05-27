@@ -14,118 +14,125 @@ const questions = [
       },
       { 
         id: 3, 
-        text: 'Un tipo de sistema operativo', 
+        text: 'Un tipo de archivo multimedia', 
         correct: false 
       },
       { 
         id: 4, 
-        text: 'Un dispositivo de almacenamiento en la nube', 
+        text: 'Un lenguaje de programación', 
         correct: false 
       }
     ],
-    explanation: 'Una red de computadoras es un conjunto de dispositivos conectados entre sí para compartir información y recursos como impresoras, archivos o conexión a Internet.'
+    explanation: 'Una red conecta dispositivos para permitir la comunicación entre ellos.'
   },
   {
     id: 2,
     type: 'truefalse',
-    question: 'El protocolo TCP/IP es el estándar de comunicación en Internet.',
-    correctAnswer: 'Verdadero',
-    explanation: 'TCP/IP es el conjunto de protocolos de red en los que se basa Internet y la mayoría de las redes actuales.'
+    question: 'Las redes WAN son redes de área pequeña.',
+    correctAnswer: 'Falso',
+    explanation: 'Las WAN (Wide Area Network) abarcan grandes extensiones geográficas.'
   },
   {
     id: 3,
-    type: 'matching',
-    question: 'Empareja cada capa del modelo OSI con su función:',
-    items: [
-      { term: 'Capa de Aplicación', correct: 'Proporciona servicios de red a las aplicaciones' },
-      { term: 'Capa de Transporte', correct: 'Gestiona la entrega confiable de datos' },
-      { term: 'Capa de Red', correct: 'Encamina los paquetes a través de la red' },
-      { term: 'Capa de Enlace de Datos', correct: 'Gestiona la transmisión de tramas entre nodos' }
-    ],
+    type: 'choice',
+    multiple: true,
+    question: '¿Cuáles de los siguientes elementos son componentes de una red?',
     options: [
-      'Proporciona servicios de red a las aplicaciones',
-      'Gestiona la entrega confiable de datos',
-      'Encamina los paquetes a través de la red',
-      'Gestiona la transmisión de tramas entre nodos'
+      { id: 1, text: 'Computadoras', correct: true },
+      { id: 2, text: 'Switches', correct: true },
+      { id: 3, text: 'Lámparas', correct: false },
+      { id: 4, text: 'Cables Ethernet', correct: true }
     ],
-    explanation: 'El modelo OSI tiene 7 capas, cada una con funciones específicas en la comunicación de red.'
+    explanation: 'Los dispositivos, medios de transmisión y dispositivos de red conforman una red.'
   },
   {
     id: 4,
-    type: 'choice',
-    multiple: true,
-    question: '¿Cuáles de los siguientes son dispositivos de red?',
-    options: [
-      { id: 1, text: 'Router', correct: true },
-      { id: 2, text: 'Switch', correct: true },
-      { id: 3, text: 'Teclado', correct: false },
-      { id: 4, text: 'Monitor', correct: false },
-      { id: 5, text: 'Hub', correct: true }
+    type: 'matching',
+    question: 'Relacione cada capa del modelo OSI con su función principal.',
+    items: [
+      { term: 'Física', correct: 'Transmisión de bits' },
+      { term: 'Transporte', correct: 'Entrega fiable de datos' },
+      { term: 'Red', correct: 'Direccionamiento IP' },
+      { term: 'Aplicación', correct: 'Interacción del usuario con la red' }
     ],
-    explanation: 'Los dispositivos de red son equipos que permiten la interconexión de computadoras y otros dispositivos en una red.'
+    options: [ // Las opciones para matching deben ser un array plano de los valores correctos
+      'Transmisión de bits',
+      'Entrega fiable de datos',
+      'Direccionamiento IP',
+      'Interacción del usuario con la red'
+    ],
+    explanation: 'Cada capa del modelo OSI cumple una función específica dentro del proceso de comunicación.'
   },
   {
     id: 5,
     type: 'truefalse',
-    question: 'La dirección IP 192.168.1.1 es una dirección IP pública.',
-    correctAnswer: 'Falso',
-    explanation: 'Las direcciones IP que comienzan con 192.168.x.x son direcciones privadas reservadas para redes locales.'
+    question: 'La capa de sesión del modelo OSI es la responsable de iniciar y mantener una comunicación.',
+    correctAnswer: 'Verdadero',
+    explanation: 'Esta capa establece y gestiona sesiones entre aplicaciones.'
   },
   {
     id: 6,
-    type: 'matching',
-    question: 'Empareja cada tipo de cable de red con su descripción:',
-    items: [
-      { term: 'UTP Cat 5e', correct: 'Hasta 1 Gbps, 100 MHz de ancho de banda' },
-      { term: 'UTP Cat 6', correct: 'Hasta 10 Gbps, 250 MHz de ancho de banda' },
-      { term: 'Fibra óptica monomodo', correct: 'Larga distancia, núcleo fino' },
-      { term: 'Fibra óptica multimodo', correct: 'Corta distancia, núcleo ancho' }
-    ],
+    type: 'choice',
+    multiple: false,
+    question: '¿Cuál es el protocolo principal de la capa de red del modelo TCP/IP?',
     options: [
-      'Hasta 1 Gbps, 100 MHz de ancho de banda',
-      'Hasta 10 Gbps, 250 MHz de ancho de banda',
-      'Larga distancia, núcleo fino',
-      'Corta distancia, núcleo ancho'
+      { id: 1, text: 'HTTP', correct: false },
+      { id: 2, text: 'IP', correct: true },
+      { id: 3, text: 'FTP', correct: false },
+      { id: 4, text: 'TCP', correct: false }
     ],
-    explanation: 'Los diferentes tipos de cableado tienen características específicas que los hacen más adecuados para ciertos usos.'
+    explanation: 'La capa Internet usa el protocolo IP para direccionamiento y enrutamiento.'
   },
   {
     id: 7,
     type: 'choice',
     multiple: false,
-    question: '¿Qué protocolo se utiliza para asignar direcciones IP automáticamente en una red?',
+    question: 'El modelo TCP/IP tiene cuántas capas:',
     options: [
-      { id: 1, text: 'HTTP', correct: false },
-      { id: 2, text: 'FTP', correct: false },
-      { id: 3, text: 'DHCP', correct: true },
-      { id: 4, text: 'DNS', correct: false }
+      { id: 1, text: '7', correct: false },
+      { id: 2, text: '5', correct: false },
+      { id: 3, text: '4', correct: true },
+      { id: 4, text: '3', correct: false }
     ],
-    explanation: 'DHCP (Dynamic Host Configuration Protocol) se encarga de asignar direcciones IP de forma automática a los dispositivos en una red.'
+    explanation: 'El modelo TCP/IP posee 4 capas principales: Aplicación, Transporte, Internet y Acceso a la red.'
   },
   {
     id: 8,
-    type: 'truefalse',
-    question: 'El ancho de banda se mide en bits por segundo (bps).',
-    correctAnswer: 'Verdadero',
-    explanation: 'El ancho de banda es la cantidad máxima de datos que pueden transmitirse a través de una conexión de red en un período de tiempo determinado, y se mide en bits por segundo (bps) o múltiplos como Kbps, Mbps o Gbps.'
+    type: 'choice',
+    multiple: true,
+    question: 'Selecciona capas del modelo OSI que no tienen correspondencia directa en TCP/IP.',
+    options: [
+      { id: 1, text: 'Presentación', correct: true },
+      { id: 2, text: 'Sesión', correct: true },
+      { id: 3, text: 'Red', correct: false },
+      { id: 4, text: 'Aplicación', correct: false }
+    ],
+    explanation: 'Las capas Sesión y Presentación están integradas en la capa de Aplicación del TCP/IP.'
   },
   {
     id: 9,
+    type: 'truefalse',
+    question: 'En el encapsulamiento, el tráiler se añade en la capa de red.',
+    correctAnswer: 'Falso',
+    explanation: 'El tráiler se añade en la capa de enlace de datos.'
+  },
+  {
+    id: 10,
     type: 'matching',
-    question: 'Empareja cada tipo de red con su descripción:',
+    question: 'Relaciona cada unidad de datos con su capa correspondiente.',
     items: [
-      { term: 'LAN', correct: 'Red de área local, alcance limitado' },
-      { term: 'WAN', correct: 'Red de área amplia, cubre grandes distancias' },
-      { term: 'MAN', correct: 'Red de área metropolitana' },
-      { term: 'PAN', correct: 'Red de área personal' }
+      { term: 'Segmento', correct: 'Transporte' },
+      { term: 'Paquete', correct: 'Red' },
+      { term: 'Trama', correct: 'Enlace de datos' },
+      { term: 'Bit', correct: 'Física' }
     ],
     options: [
-      'Red de área local, alcance limitado',
-      'Red de área amplia, cubre grandes distancias',
-      'Red de área metropolitana',
-      'Red de área personal'
+      'Transporte',
+      'Red',
+      'Enlace de datos',
+      'Física'
     ],
-    explanation: 'Las redes se clasifican según su alcance geográfico y propósito.'
+    explanation: 'Cada capa encapsula los datos usando su propia unidad: segmento, paquete, trama, bit.'
   }
 ];
 
