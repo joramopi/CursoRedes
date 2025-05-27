@@ -33,17 +33,17 @@
 <body class="bg-gray-50">
     <div id="app" class="flex flex-col lg:flex-row min-h-screen">
         <!-- Sidebar Navigation -->
-        <div class="sidebar w-full lg:w-64 text-white p-4 bg-blue-900 flex-shrink-0">
+        <div class="sidebar w-full lg:w-64 text-white p-4 bg-[#2d6073] flex-shrink-0">
             <div class="flex items-center justify-center lg:justify-start mb-8 pt-2">
                 <div class="bg-white p-2 rounded-full">
-                    <i class="fas fa-network-wired text-2xl text-blue-900"></i>
+                    <i class="fas fa-network-wired text-2xl text-[#2d6073]"></i>
                 </div>
                 <h1 class="text-xl ml-3 font-bold">CC-0601</h1>
             </div>
             
             <nav>
                 <div class="mb-4 text-sm text-gray-300 uppercase tracking-wider pl-4">Navegación</div>
-                <a href="index.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1 bg-blue-700">
+                <a href="index.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1 bg-[#3a738c]">
                     <i class="fas fa-home mr-3"></i>
                     <span>Volver al Inicio</span>
                 </a>
@@ -52,32 +52,43 @@
                     <span>Volver a la Unidad 1</span>
                 </a>
                 
-                <div class="mt-8 pt-4 border-t border-blue-800">
+                <div class="mt-8 pt-4 border-t border-[#2d6073]">
                     <div class="text-sm text-gray-400 mb-2">Otras evaluaciones:</div>
-                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg mb-1 flex items-center">
+                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-[#3a738c] rounded-lg mb-1 flex items-center">
                         <i class="fas fa-tasks mr-2 w-4 text-center"></i>
                         Test Unidad 2
                     </a>
-                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg mb-1 flex items-center">
+                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-[#3a738c] rounded-lg mb-1 flex items-center">
                         <i class="fas fa-tasks mr-2 w-4 text-center"></i>
                         Test Unidad 3
                     </a>
-                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg flex items-center">
+                    <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-[#3a738c] rounded-lg flex items-center">
                         <i class="fas fa-tasks mr-2 w-4 text-center"></i>
                         Test Unidad 4
                     </a>
                 </div>
 
                 <!-- Opciones de Quiz (Solo para depuración o configuración) -->
-                <div class="mt-8 pt-4 border-t border-blue-800">
+                <div class="mt-8 pt-4 border-t border-[#2d6073]">
                     <div class="text-sm text-gray-400 mb-2">Configuración del Quiz:</div>
                     <label class="flex items-center text-gray-300 py-2 px-4 text-sm mb-1">
-                        <input type="checkbox" v-model="randomizeQuestions" class="h-4 w-4 text-blue-600 rounded border-gray-300 mr-2">
+                        <input type="checkbox" v-model="randomizeQuestions" class="h-4 w-4 text-[#4787a4] rounded border-gray-300 mr-2">
                         <span>Preguntas aleatorias</span>
                     </label>
                     <label class="flex items-center text-gray-300 py-2 px-4 text-sm mb-1">
-                        <input type="checkbox" v-model="randomizeOptions" class="h-4 w-4 text-blue-600 rounded border-gray-300 mr-2">
+                        <input type="checkbox" v-model="randomizeOptions" class="h-4 w-4 text-[#4787a4] rounded border-gray-300 mr-2">
                         <span>Opciones aleatorias</span>
+                    </label>
+                    
+                    <!-- CAMBIO: Campo para seleccionar número de preguntas ahora es un SELECT -->
+                    <label class="block text-gray-300 py-2 px-4 text-sm mt-4">
+                        Número de preguntas:
+                        <select v-model.number="numberOfQuestions" 
+                                @change="resetQuiz" 
+                                class="w-full mt-1 p-2 rounded bg-[#2d6073] text-white border border-[#3a738c] focus:outline-none focus:ring focus:border-[#4787a4]">
+                            <!-- Genera opciones del 1 al número total de preguntas disponibles -->
+                            <option v-for="n in allQuestions.length" :key="n" :value="n">{{ n }}</option>
+                        </select>
                     </label>
                 </div>
             </nav>
@@ -86,14 +97,14 @@
         <!-- Main Content Area -->
         <div class="flex-1 min-h-screen flex flex-col">
             <!-- Header -->
-            <header class="bg-blue-600 text-white shadow-md">
+            <header class="bg-[#4787a4] text-white shadow-md">
                 <div class="container mx-auto px-4 py-6">
                     <h1 class="text-2xl md:text-3xl font-bold">Evaluación Interactiva</h1>
-                    <p class="text-blue-100">Unidad 1: Introducción a las Redes de Computadoras</p>
+                    <p class="text-[#c2dce6]">Unidad 1: Introducción a las Redes de Computadoras</p>
             
                     <!-- Progress Bar -->
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
-                        <div class="bg-blue-400 h-2.5 rounded-full transition-all duration-300" 
+                        <div class="bg-[#5ea7c4] h-2.5 rounded-full transition-all duration-300" 
                              :style="{width: ((currentQuestionIndex + 1) / displayedQuestions.length * 100) + '%'}"></div>
                     </div>
                     <div class="flex justify-between text-sm mt-2">
@@ -109,7 +120,6 @@
                 <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                     <!-- Pregunta actual del quiz -->
                     <transition name="fade" mode="out-in">
-                        <!-- ¡IMPORTANTE! Añadido `&& currentQuestion` aquí para evitar el TypeError al cargar -->
                         <div v-if="!quizCompleted && currentQuestion" :key="currentQuestionIndex" class="question-container">
                             <h2 class="text-xl font-semibold mb-6">{{ currentQuestion.question }}</h2>
                             <p class="text-gray-600 text-sm mb-4">
@@ -131,7 +141,7 @@
                                                 :checked="isOptionSelected(option, index)"
                                                 @change="toggleOption(option, $event)"
                                                 :disabled="quizSubmitted"
-                                                class="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                                                class="h-5 w-5 text-[#4787a4] rounded border-gray-300 focus:ring-[#4787a4]">
                                             <span class="ml-3">{{ option.text }}</span>
                                         </div>
                                         <!-- Radio button para selección única -->
@@ -141,7 +151,7 @@
                                                 @change="selectSingleOption(option, $event)"
                                                 :name="'question-' + currentQuestionIndex"
                                                 :disabled="quizSubmitted"
-                                                class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                class="h-5 w-5 text-[#4787a4] border-gray-300 focus:ring-[#4787a4]">
                                             <span class="ml-3">{{ option.text }}</span>
                                         </div>
                                     </label>
@@ -163,7 +173,7 @@
                                             :class="{
                                                 'border-green-500': quizSubmitted && isOptionCorrect(option),
                                                 'border-red-500': quizSubmitted && isOptionSelected(option) && !isOptionCorrect(option),
-                                                'border-blue-300': !quizSubmitted && isOptionSelected(option), 
+                                                'border-[#75b0c8]': !quizSubmitted && isOptionSelected(option), 
                                                 'border-gray-300': !isOptionSelected(option) && !quizSubmitted 
                                             }">
                                             <div v-if="isOptionSelected(option)" 
@@ -171,7 +181,7 @@
                                                 :class="{
                                                     'bg-green-500': quizSubmitted && isOptionCorrect(option),
                                                     'bg-red-500': quizSubmitted && !isOptionCorrect(option),
-                                                    'bg-blue-500': !quizSubmitted 
+                                                    'bg-[#4787a4]': !quizSubmitted 
                                                 }"></div>
                                             <div v-else-if="quizSubmitted && isOptionCorrect(option)" 
                                                  class="w-3 h-3 rounded-full bg-green-500"></div>
@@ -191,7 +201,7 @@
                                             :class="{
                                                 'bg-green-50 border-green-500': quizSubmitted && isMatchingCorrect(index),
                                                 'bg-red-50 border-red-500': quizSubmitted && !isMatchingCorrect(index) && userAnswers[currentQuestionIndex][index],
-                                                'bg-blue-50 border-blue-300': !quizSubmitted && userAnswers[currentQuestionIndex][index] !== '' && userAnswers[currentQuestionIndex][index] !== undefined, 
+                                                'bg-[#e0eef4] border-[#75b0c8]': !quizSubmitted && userAnswers[currentQuestionIndex][index] !== '' && userAnswers[currentQuestionIndex][index] !== undefined, 
                                                 'border-gray-300': !userAnswers[currentQuestionIndex][index] 
                                             }"
                                             :disabled="quizSubmitted">
@@ -230,7 +240,7 @@
                             <button v-if="currentQuestion.type === 'choice' && currentQuestion.multiple && !quizSubmitted"
                                     @click="checkAnswer" 
                                     :disabled="!isAnswerSelected"
-                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700 transition-colors"
+                                    class="px-6 py-2 bg-[#4787a4] text-white rounded-lg disabled:opacity-50 hover:bg-[#3a738c] transition-colors"
                                     aria-label="Verificar mi respuesta">
                                 Verificar Respuesta<i class="fas fa-check ml-2"></i>
                             </button>
@@ -239,7 +249,7 @@
                             <button v-else-if="!isLastQuestion" 
                                     @click="nextQuestion" 
                                     :disabled="!isAnswerSelected || !quizSubmitted"
-                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700 transition-colors"
+                                    class="px-6 py-2 bg-[#4787a4] text-white rounded-lg disabled:opacity-50 hover:bg-[#3a738c] transition-colors"
                                     aria-label="Siguiente pregunta">
                                 Siguiente<i class="fas fa-arrow-right ml-2"></i>
                             </button>
@@ -262,10 +272,10 @@
                         <h2 class="text-2xl font-bold mb-2">¡Evaluación Completada!</h2>
                         <p class="text-gray-600 mb-6">Has completado la evaluación de la Unidad 1</p>
                         
-                        <div class="bg-blue-50 p-6 rounded-lg max-w-md mx-auto mb-8">
-                            <div class="text-4xl font-bold text-blue-600 mb-2">{{ score }}%</div>
+                        <div class="bg-[#e0eef4] p-6 rounded-lg max-w-md mx-auto mb-8">
+                            <div class="text-4xl font-bold text-[#4787a4] mb-2">{{ score }}%</div>
                             <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
-                                <div class="bg-blue-600 h-4 rounded-full" 
+                                <div class="bg-[#4787a4] h-4 rounded-full" 
                                     :style="{width: score + '%'}"></div>
                             </div>
                             <p class="text-sm text-gray-600">
@@ -317,7 +327,7 @@
                         
                         <div class="mt-8 flex justify-center">
                             <button @click="resetQuiz" 
-                                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                    class="px-6 py-3 bg-[#4787a4] text-white rounded-lg hover:bg-[#3a738c] transition-colors"
                                     aria-label="Reiniciar cuestionario">
                                 Reiniciar cuestionario
                             </button>
@@ -339,7 +349,7 @@
         <!-- Cargar dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.min.js"></script>
     <!-- Cargar las preguntas desde un archivo externo -->
-    <script src="public/questions.js"></script> 
+    <script src="public/questions1.js"></script> 
     <script>
         const { createApp, ref, computed, onMounted, nextTick, watch } = Vue; 
 
@@ -347,7 +357,7 @@
         const allQuestions = window.quizQuestions || [];
         
         if (allQuestions.length === 0) {
-            console.error('No se pudieron cargar las preguntas. Verifica que el archivo public/questions.js esté correctamente configurado y asigne las preguntas a window.quizQuestions.');
+            console.error('No se pudieron cargar las preguntas. Verifica que el archivo public/questions1.js esté correctamente configurado y asigne las preguntas a window.quizQuestions.');
         }
 
         // Crear la aplicación Vue
@@ -356,18 +366,26 @@
                 // Configuración de usuario
                 const randomizeQuestions = ref(localStorage.getItem('randomizeQuestions') === 'true');
                 const randomizeOptions = ref(localStorage.getItem('randomizeOptions') === 'true');
+                
+                // NUEVO: Número de preguntas a mostrar
+                const storedNumQuestions = parseInt(localStorage.getItem('numberOfQuestions'));
+                // Si no hay valor guardado, o es inválido, usar el total de preguntas disponibles por defecto
+                const initialNumQuestions = (isNaN(storedNumQuestions) || storedNumQuestions < 1 || storedNumQuestions > allQuestions.length) 
+                                            ? allQuestions.length 
+                                            : storedNumQuestions;
+                const numberOfQuestions = ref(initialNumQuestions);
 
                 // Estado del quiz
                 const displayedQuestions = ref([]); // Array de preguntas actual, puede ser aleatorio
                 const currentQuestionIndex = ref(0);
                 const userAnswers = ref([]); // Almacena las respuestas del usuario
                 const quizSubmitted = ref(false); // Indica si la pregunta actual ha sido "evaluada"
-                const quizCompleted = ref(false); // CORRECCIÓN: Inicializar con false, no con ref
+                const quizCompleted = ref(false); 
                 const showFeedback = ref(false); // Controla la visibilidad del feedback de la pregunta actual
                 const isAnswerCorrect = ref(false); // Resultado del feedback de la pregunta actual
 
                 // Estado del temporizador
-                const quizStartTime = ref(0); // Este ref no se usa, pero no causa problema
+                const quizStartTime = ref(0); 
                 const elapsedTime = ref(0);
                 let timerInterval = null;
 
@@ -380,13 +398,17 @@
                     localStorage.setItem('randomizeOptions', newValue);
                     resetQuiz(); // Reiniciar el quiz si cambia la configuración
                 });
+                // NUEVO Watcher para numberOfQuestions
+                watch(numberOfQuestions, (newValue) => {
+                    localStorage.setItem('numberOfQuestions', newValue);
+                    resetQuiz(); // Reiniciar el quiz si cambia el número de preguntas
+                });
 
 
                 // Propiedades computadas
                 const currentQuestion = computed(() => {
-                    // Verificación añadida para asegurar que no sea undefined al inicio
                     if (!displayedQuestions.value || displayedQuestions.value.length === 0) {
-                        return null; // O un objeto placeholder vacío si prefieres
+                        return null; 
                     }
                     return displayedQuestions.value[currentQuestionIndex.value];
                 });
@@ -395,7 +417,7 @@
                 
                 const isAnswerSelected = computed(() => {
                     const currentAns = userAnswers.value[currentQuestionIndex.value];
-                    const qType = currentQuestion.value?.type; // Usar optional chaining
+                    const qType = currentQuestion.value?.type; 
 
                     if (qType === 'choice' && currentQuestion.value.multiple) {
                         return Array.isArray(currentAns) && currentAns.length > 0;
@@ -406,7 +428,6 @@
                         const selectedAnswers = currentAns || {}; 
                         const numSelected = Object.keys(selectedAnswers).length;
 
-                        // Asegúrate de que todas las opciones de matching tengan un valor seleccionado
                         return numSelected === numItems && Object.values(selectedAnswers).every(val => val !== '' && val !== null && val !== undefined);
                     }
                     return false;
@@ -425,7 +446,6 @@
 
                 // Métodos auxiliares
                 function shuffleArray(array) {
-                    // Crear una copia del array para no mutar el original
                     const newArray = [...array]; 
                     for (let i = newArray.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
@@ -463,9 +483,10 @@
                             userAnswers: userAnswers.value,
                             quizCompleted: quizCompleted.value,
                             elapsedTime: elapsedTime.value,
-                            displayedQuestionIds: displayedQuestions.value.map(q => q.id), // Guardar solo IDs si son aleatorias
-                            randomizeQuestions: randomizeQuestions.value, // Guardar configuración
-                            randomizeOptions: randomizeOptions.value // Guardar configuración
+                            displayedQuestionIds: displayedQuestions.value.map(q => q.id), 
+                            randomizeQuestions: randomizeQuestions.value, 
+                            randomizeOptions: randomizeOptions.value,
+                            numberOfQuestions: numberOfQuestions.value 
                         };
                         localStorage.setItem('quizProgress', JSON.stringify(progress));
                     } catch (e) {
@@ -479,27 +500,33 @@
                         if (savedProgress) {
                             const progress = JSON.parse(savedProgress);
                             
-                            // Verificar si las configuraciones de aleatorización han cambiado
+                            // Verificar si las configuraciones de aleatorización o número de preguntas han cambiado
                             const configChanged = (progress.randomizeQuestions !== randomizeQuestions.value ||
-                                                   progress.randomizeOptions !== randomizeOptions.value);
+                                                   progress.randomizeOptions !== randomizeOptions.value ||
+                                                   progress.numberOfQuestions !== numberOfQuestions.value); 
 
                             if (configChanged || !progress.displayedQuestionIds || progress.displayedQuestionIds.length === 0) {
-                                // Si la configuración cambió o no hay IDs guardados, iniciar un quiz nuevo
                                 console.log("Configuración de quiz cambiada o progreso inválido. Iniciando quiz nuevo.");
-                                initializeQuizQuestions(true); // Pasar 'true' para forzar reinicio de respuestas
+                                initializeQuizQuestions(true); 
                                 startTimer();
-                                return; // Salir de la función para evitar sobrescribir
+                                return; 
                             }
 
                             currentQuestionIndex.value = progress.currentQuestionIndex;
                             userAnswers.value = progress.userAnswers;
-                            quizCompleted.value = progress.quizCompleted; // CORRECTO: Asignar el valor guardado
+                            quizCompleted.value = progress.quizCompleted; 
                             elapsedTime.value = progress.elapsedTime;
                             
-                            // Reconstruir displayedQuestions usando los IDs guardados
+                            // Asegurarse de que numberOfQuestions refleje el progreso cargado para la próxima vez que se inicie el quiz
+                            // y que esté dentro de los límites válidos
+                            let loadedNumQuestions = progress.numberOfQuestions;
+                            if (loadedNumQuestions > allQuestions.length) loadedNumQuestions = allQuestions.length;
+                            if (loadedNumQuestions < 1) loadedNumQuestions = 1;
+                            numberOfQuestions.value = loadedNumQuestions;
+                            
                             displayedQuestions.value = progress.displayedQuestionIds
                                 .map(id => allQuestions.find(q => q.id === id))
-                                .filter(q => q); // Asegurarse de que no haya preguntas nulas
+                                .filter(q => q); 
 
                             if (!quizCompleted.value) {
                                 startTimer();
@@ -508,12 +535,11 @@
                             }
                             console.log("Progreso cargado con éxito.");
                         } else {
-                            initializeQuizQuestions(true); // Iniciar un quiz nuevo y respuestas
+                            initializeQuizQuestions(true); 
                             startTimer();
                         }
                     } catch (e) {
                         console.error("Error al cargar el progreso:", e);
-                        // En caso de error, iniciar un quiz nuevo
                         initializeQuizQuestions(true);
                         startTimer();
                     }
@@ -525,21 +551,21 @@
                         tempQuestions = shuffleArray(tempQuestions);
                     }
                     
-                    // Asegúrate de que las opciones también se aleatoricen si se pide
-                    displayedQuestions.value = tempQuestions.map(q => {
+                    // Limitar el número de preguntas a mostrar
+                    // Asegurarse de que numberOfQuestions no exceda el total disponible, ni sea menor que 1
+                    const numToDisplay = Math.min(Math.max(1, numberOfQuestions.value), tempQuestions.length);
+                    
+                    displayedQuestions.value = tempQuestions.slice(0, numToDisplay).map(q => { 
                         let newQ = { ...q };
                         if (newQ.type === 'choice' && randomizeOptions.value && newQ.options) {
                             newQ.options = shuffleArray(newQ.options);
                         }
                         if (newQ.type === 'matching' && randomizeOptions.value && newQ.options) {
-                            // Las opciones para matching son las posibles respuestas, no los términos
-                            // Shuffulear aquí es correcto.
                             newQ.options = shuffleArray(newQ.options);
                         }
                         return newQ;
                     });
                     
-                    // Inicializar userAnswers para el nuevo set de preguntas SOLO si se pide resetear o es la primera carga
                     if (resetAnswers) {
                         userAnswers.value = Array(displayedQuestions.value.length).fill(null).map((_, idx) => {
                             const q = displayedQuestions.value[idx];
@@ -560,9 +586,9 @@
                 // Lógica de las preguntas
                 function isOptionCorrect(option) {
                     const question = currentQuestion.value;
-                    if (question?.type === 'choice') { // Usar optional chaining
+                    if (question?.type === 'choice') { 
                         return option.correct === true;
-                    } else if (question?.type === 'truefalse') { // Usar optional chaining
+                    } else if (question?.type === 'truefalse') { 
                         return option === question.correctAnswer;
                     }
                     return false;
@@ -572,21 +598,18 @@
                     const isSelected = isOptionSelected(option, index);
                     
                     if (!quizSubmitted.value) {
-                        // Resaltado antes de enviar la respuesta
                         return isSelected 
-                            ? 'bg-blue-50 border-blue-300' 
+                            ? 'bg-[#e0eef4] border-[#75b0c8]' 
                             : 'hover:bg-gray-50';
                     }
                     
-                    // Retroalimentación después de enviar la respuesta
-                    const isCorrect = isOptionCorrect(option); // Esta es para choice/truefalse
+                    const isCorrect = isOptionCorrect(option); 
                     if (isCorrect) {
                         return isSelected ? 'bg-green-100 border-green-500' : 'bg-green-50 border-green-300';
                     } else if (isSelected) {
                         return 'bg-red-50 border-red-500';
                     }
                     
-                    // Si no está seleccionada y no es la correcta, o es matching, color por defecto
                     return 'bg-gray-50';
                 }
 
@@ -596,18 +619,16 @@
                     
                     const question = currentQuestion.value;
 
-                    if (question?.type === 'choice') { // Usar optional chaining
+                    if (question?.type === 'choice') { 
                         if (question.multiple) {
                             return Array.isArray(currentAnswer) && 
                                    currentAnswer.some(ans => ans && ans.text === option.text);
                         } else {
                             return currentAnswer && currentAnswer.text === option.text;
                         }
-                    } else if (question?.type === 'truefalse') { // Usar optional chaining
+                    } else if (question?.type === 'truefalse') { 
                         return currentAnswer === option;
-                    } else if (question?.type === 'matching' && index !== undefined) { // Usar optional chaining
-                        // Para matching, `option` es el texto de la opción del select, `index` es el índice del item
-                        // currentAnswer[index] debería ser el valor seleccionado para ese item
+                    } else if (question?.type === 'matching' && index !== undefined) { 
                         return currentAnswer[index] !== undefined && currentAnswer[index] === option;
                     }
                     return false;
@@ -624,12 +645,12 @@
                         newAnswers.splice(optionIndex, 1);
                         userAnswers.value[currentQuestionIndex.value] = newAnswers;
                     }
-                    saveProgress(); // Guardar progreso después de cada cambio de selección
+                    saveProgress(); 
                 }
 
                 function selectSingleOption(option, event) {
                     userAnswers.value[currentQuestionIndex.value] = option;
-                    checkAnswer(); // Para selección única, la respuesta se verifica inmediatamente
+                    checkAnswer(); 
                 }
 
                 function checkAnswer() {
@@ -638,10 +659,10 @@
 
                     let currentQIsCorrect = false; 
 
-                    if (!isAnswerSelected.value) { // Si no hay respuesta seleccionada, no hay feedback ni se "envía"
+                    if (!isAnswerSelected.value) { 
                         showFeedback.value = false;
                         quizSubmitted.value = false;
-                        isAnswerCorrect.value = false; // Resetear también
+                        isAnswerCorrect.value = false; 
                         return;
                     }
 
@@ -665,7 +686,6 @@
                     } else if (question.type === 'matching') {
                         const currentAnswers = userAnswer;
                         currentQIsCorrect = Object.entries(currentAnswers || {}).every(([index, answer]) => {
-                            // CORRECCIÓN: Asegura que el índice de `items` coincida con la respuesta en `userAnswers`
                             return answer === question.items[parseInt(index)].correct; 
                         }) && Object.keys(currentAnswers).length === question.items.length; 
                     }
@@ -673,8 +693,6 @@
                     isAnswerCorrect.value = currentQIsCorrect; 
 
                     nextTick(() => {
-                        // quizSubmitted y showFeedback solo se activan cuando la pregunta es "completa"
-                        // y el usuario ha disparado la verificación (automática o con botón)
                         showFeedback.value = true;
                         quizSubmitted.value = true;
 
@@ -692,7 +710,7 @@
                         currentQuestionIndex.value++;
                         showFeedback.value = false;
                         quizSubmitted.value = false;
-                        isAnswerCorrect.value = false; // MEJORA: Resetear el estado de la respuesta correcta
+                        isAnswerCorrect.value = false; 
                     }
                     saveProgress();
                 }
@@ -702,13 +720,13 @@
                         currentQuestionIndex.value--;
                         showFeedback.value = false;
                         quizSubmitted.value = false;
-                        isAnswerCorrect.value = false; // MEJORA: Resetear el estado de la respuesta correcta
+                        isAnswerCorrect.value = false; 
                     }
                     saveProgress();
                 }
 
                 function submitQuiz() {
-                    if (!quizSubmitted.value) { // Asegúrate de que la última pregunta se verifique
+                    if (!quizSubmitted.value) { 
                         checkAnswer(); 
                     }
                     quizCompleted.value = true;
@@ -722,11 +740,11 @@
                     quizSubmitted.value = false;
                     quizCompleted.value = false;
                     showFeedback.value = false;
-                    isAnswerCorrect.value = false; // Resetear también
+                    isAnswerCorrect.value = false; 
                     elapsedTime.value = 0;
                     localStorage.removeItem('quizProgress'); 
                     
-                    initializeQuizQuestions(true); // Reiniciar preguntas y respuestas
+                    initializeQuizQuestions(true); 
                     startTimer();
                     saveProgress(); 
                 }
@@ -735,12 +753,11 @@
                     if (!quizSubmitted.value) return false;
                     const userAnswer = userAnswers.value[currentQuestionIndex.value]?.[index];
                     return userAnswer !== undefined && userAnswer !== '' && 
-                           currentQuestion.value.items[parseInt(index)] && userAnswer === currentQuestion.value.items[parseInt(index)].correct; // CORRECCIÓN: parseInt(index)
+                           currentQuestion.value.items[parseInt(index)] && userAnswer === currentQuestion.value.items[parseInt(index)].correct; 
                 }
                 
                 function isOptionUsed(option, currentIndex) {
                     const currentAnswers = userAnswers.value[currentQuestionIndex.value] || {};
-                    // Verificar si la opción ya está seleccionada para *otro* término de matching
                     return Object.entries(currentAnswers)
                         .some(([idx, ans]) => parseInt(idx) !== currentIndex && ans === option);
                 }
@@ -749,7 +766,7 @@
                     const question = displayedQuestions.value[questionIndex];
                     const answer = userAnswers.value[questionIndex];
 
-                    if (!question || !answer) return false; // Protección adicional
+                    if (!question || !answer) return false; 
 
                     if (question.type === 'choice') {
                         if (question.multiple) {
@@ -772,7 +789,7 @@
                     } else if (question.type === 'matching') {
                         const currentMatchingAnswers = answer || {};
                         return question.items.every((item, index) => 
-                            currentMatchingAnswers[index] === item.correct // 'index' aquí es numérico del `every`
+                            currentMatchingAnswers[index] === item.correct 
                         ) && Object.keys(currentMatchingAnswers).length === question.items.length && Object.values(currentMatchingAnswers).every(val => val !== '' && val !== null && val !== undefined); 
                     }
                     return false;
@@ -788,6 +805,7 @@
                 return {
                     randomizeQuestions,
                     randomizeOptions,
+                    numberOfQuestions, 
                     displayedQuestions,
                     currentQuestionIndex,
                     userAnswers,
@@ -801,6 +819,7 @@
                     score,
                     elapsedTime,
                     correctAnswersCount,
+                    allQuestions, 
                     
                     formatTime,
                     toggleOption,

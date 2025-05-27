@@ -11,7 +11,7 @@
 </head>
 <body class="bg-gray-50">
     <div class="flex flex-col lg:flex-row">
-        <!-- Sidebar Navigation -->
+                <!-- Sidebar Navigation -->
         <div class="sidebar w-full lg:w-64 text-white p-4">
             <div class="flex items-center justify-center lg:justify-start mb-8 pt-2">
                 <div class="bg-white p-2 rounded-full">
@@ -21,51 +21,19 @@
             </div>
             
             <nav>
-                <div class="mb-4 text-sm text-gray-400 uppercase tracking-wider pl-4">Principal</div>
+                <div class="mb-4 text-sm text-gray-400 uppercase tracking-wider pl-4">Navegación</div>
+                
+                <!-- Opción: Volver al Inicio -->
                 <a href="index.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
                     <i class="fas fa-home mr-3"></i>
-                    <span>Inicio</span>
+                    <span>Volver al Inicio</span>
                 </a>
-                <div class="relative">
-                    <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1 bg-blue-700" id="menu-unidades">
-                        <i class="fas fa-book mr-3"></i>
-                        <span>Unidades</span>
-                        <i class="fas fa-chevron-down ml-auto text-sm"></i>
-                    </a>
-                    <div id="submenu-unidades" class="hidden absolute left-0 right-0 mt-1 bg-blue-900 rounded-lg shadow-lg z-10">
-                        <a href="UT1.html" class="block py-2 px-4 text-sm text-white hover:bg-blue-800 rounded-lg mb-1 unidad-item" data-unidad="0">1. Introducción a las Redes de Computadoras</a>
-                        <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg mb-1 unidad-item" data-unidad="1">2. Medios y señales</a>
-                        <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg mb-1 unidad-item" data-unidad="2">3. Implementación de Cableado Estructurado</a>
-                        <a href="#" class="block py-2 px-4 text-sm text-gray-300 hover:bg-blue-800 rounded-lg unidad-item" data-unidad="3">4. Direcciones IP y Subredes</a>
-                    </div>
-                </div>
-                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
-                    <i class="fas fa-graduation-cap mr-3"></i>
-                    <span>Evaluación</span>
-                </a>
-                
-                <div class="mb-4 mt-6 text-sm text-gray-400 uppercase tracking-wider pl-4">Recursos</div>
-                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
-                    <i class="fas fa-list-alt mr-3"></i>
-                    <span>Glosario</span>
-                </a>
-                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
-                    <i class="fas fa-file-download mr-3"></i>
-                    <span>Material de Apoyo</span>
-                </a>
-                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
-                    <i class="fas fa-edit mr-3"></i>
-                    <span>Cuaderno</span>
-                </a>
-                
-                <div class="mb-4 mt-6 text-sm text-gray-400 uppercase tracking-wider pl-4">Asistencia IA</div>
-                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
-                    <i class="fas fa-robot mr-3"></i>
-                    <span>Asistente de Redes</span>
-                </a>
-                <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
-                    <i class="fas fa-comment-dots mr-3"></i>
-                    <span>Consultar Dudas</span>
+
+                <!-- Opción: Test Unidad 1 -->
+                <!-- Le añadimos un id para poder activarlo más fácilmente con JS -->
+                <a href="TestUT1.html" id="menu-test-ut1" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                    <i class="fas fa-question-circle mr-3"></i>
+                    <span>Test Unidad 1</span>
                 </a>
             </nav>
         </div>
@@ -105,9 +73,7 @@
                             <button class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="actividades">
                                 <i class="fas fa-tasks mr-2"></i>Actividades Autónomas
                             </button>
-                            <button class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="test">
-                                <i class="fas fa-question-circle mr-2"></i>Test de práctica
-                            </button>
+                            <!-- La pestaña de "Test de práctica" ha sido eliminada de aquí -->
                         </nav>
                     </div>
 
@@ -230,7 +196,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                                    <p class="text-sm text-blue-700">"Las redes se clasifican según su tamaño y alcance geográfico" (Tanenbaum, 2011, p. 23).</p>
+                                    <p class="text-sm text-blue-700">"Las redes se clasifican según su tamaño y alcance geográfico" (Tanenbaum, 211, p. 23).</p>
                                 </div>
                             </div>
 
@@ -631,99 +597,9 @@
                             </div>
                         </div>
 
-                        <!-- Pestaña de Test de Práctica -->
-                        <div id="test" class="tab-pane flex flex-col" style="min-height: 600px;">
-                            <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
-                                <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-                                    <h2 class="text-2xl font-bold text-gray-800">Test de Práctica - Unidad 1</h2>
-                                    <p class="text-gray-600 mt-1">Evalúa tus conocimientos sobre Redes de Computadoras</p>
-                                </div>
-                                
-                                <div class="p-8 text-center">
-                                    <div class="max-w-2xl mx-auto">
-                                        <div class="bg-blue-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-                                            <i class="fas fa-laptop-code text-4xl text-blue-600"></i>
-                                        </div>
-                                        
-                                        <h3 class="text-xl font-medium text-gray-900 mb-4">¿Cómo quieres realizar el test?</h3>
-                                        <p class="text-gray-600 mb-8">Para una mejor experiencia, te recomendamos usar un servidor web local.</p>
-                                        
-                                        <div class="grid md:grid-cols-2 gap-6">
-                                            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                                                <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                    <i class="fas fa-server text-blue-600 text-xl"></i>
-                                                </div>
-                                                <h4 class="font-medium text-gray-900 mb-2">Usar servidor local (Recomendado)</h4>
-                                                <p class="text-sm text-gray-600 mb-4">Ejecuta un servidor web local para acceder a todas las funcionalidades del test.</p>
-                                                <div class="bg-gray-50 p-3 rounded text-left text-sm text-gray-700 mb-4 font-mono overflow-x-auto">
-                                                    <div class="mb-1">1. Abre una terminal en la carpeta del proyecto</div>
-                                                    <div class="mb-1">2. Ejecuta: <span class="bg-gray-200 px-2 py-0.5 rounded">python -m http.server 8000</span></div>
-                                                    <div>3. Abre <a href="http://localhost:8000/UT1.html" class="text-blue-600 hover:underline">http://localhost:8000/UT1.html</a></div>
-                                                </div>
-                                                <a href="http://localhost:8000/UT1.html" class="inline-block w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                    Ir a localhost:8000
-                                                </a>
-                                            </div>
-                                            
-                                            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                                                <div class="bg-yellow-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                    <i class="fas fa-file-alt text-yellow-600 text-xl"></i>
-                                                </div>
-                                                <h4 class="font-medium text-gray-900 mb-2">Abrir directamente</h4>
-                                                <p class="text-sm text-gray-600 mb-4">Algunas funcionalidades podrían no estar disponibles al abrir directamente el archivo.</p>
-                                                <a href="TestUT1.html" target="_blank" class="inline-block w-full px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                    <i class="fas fa-external-link-alt mr-2"></i>
-                                                    Abrir TestUT1.html
-                                                </a>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mt-8 pt-6 border-t border-gray-200">
-                                            <div class="flex items-center justify-center text-sm text-gray-500">
-                                                <i class="fas fa-info-circle mr-2"></i>
-                                                ¿Neitas ayuda? Revisa el archivo README.md para más instrucciones
-                                            </div>
-                            </div>
-                            <script>
-                                // Código de inicialización de pestañas
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    // Manejador para cambiar entre pestañas
-                                    const tabButtons = document.querySelectorAll('[data-tab]');
-                                    tabButtons.forEach(button => {
-                                        button.addEventListener('click', function() {
-                                            const tabId = this.getAttribute('data-tab');
-                                            
-                                            // Ocultar todos los contenidos de pestañas
-                                            document.querySelectorAll('.tab-pane').forEach(pane => {
-                                                pane.classList.add('hidden');
-                                            });
-                                            
-                                            // Mostrar la pestaña seleccionada
-                                            const activePane = document.getElementById(tabId);
-                                            if (activePane) {
-                                                activePane.classList.remove('hidden');
-                                            }
-                                            
-                                            // Actualizar botones activos
-                                            tabButtons.forEach(btn => {
-                                                btn.classList.remove('border-blue-500', 'text-blue-600');
-                                                btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-                                            });
-                                            
-                                            this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-                                            this.classList.add('border-blue-500', 'text-blue-600');
-                                        });
-                                    });
-                                    
-                                    // Activar la primera pestaña por defecto
-                                    if (tabButtons.length > 0) {
-                                        tabButtons[0].click();
-                                    }
-                                });
-                            </script>
-                        </div>
-                    </div>
+                        <!-- La pestaña de "Test de Práctica" ha sido eliminada de aquí -->
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -747,7 +623,7 @@
             const scripts = [
                 'script.js',
                 'menu.js',
-                'js/tabs.js'
+                'js/tabs.js' // Este script debe contener la lógica de las pestañas
             ];
             
             function loadScript(src, callback) {

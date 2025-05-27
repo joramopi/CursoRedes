@@ -4,17 +4,182 @@ body {
     background-color: #f0f2f5;
 }
 
-/* Barra lateral */
+/* ************************************** */
+/* Sidebar - Colores dinámicos por Unidad */
+/* ************************************** */
+
+/* Altura mínima de la barra lateral (se mantiene general) */
 .sidebar {
-    background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
     min-height: 100vh;
+    transition: background-color 0.5s ease, background-image 0.5s ease; /* Transición para el cambio de color */
+    color: white; /* Color de texto por defecto para los sidebars oscuros */
 }
+
+/* Base para el ícono de la red en el sidebar */
+.sidebar .fa-network-wired {
+    color: #2c3e50; /* Color base oscuro para el ícono */
+}
+.sidebar .bg-white { /* Fondo blanco para el ícono */
+    background-color: #e2e8f0;
+}
+
+
+/* -- Colores para "Principal" (index.html) -- */
+.sidebar-principal {
+    background: linear-gradient(180deg, #50d1eb 0%, #3aa2bb 100%); /* Colores claros */
+    color: #1a202c !important; /* Texto oscuro para contrastar con fondo claro */
+}
+.sidebar-principal .text-white { /* Sobrescribe text-white de Tailwind */
+    color: #1a202c !important;
+}
+.sidebar-principal .text-gray-400 { /* Sobrescribe text-gray-400 de Tailwind */
+    color: #4a5568 !important; /* Gris más oscuro para contrastar */
+}
+/* Item activo para Principal */
+.sidebar-principal .menu-item.bg-blue-700 {
+    background-color: #3aa2bb !important; /* Tono de azul que combina */
+    color: white !important; /* Asegura que el texto activo sea blanco */
+}
+/* Submenú para Principal */
+.sidebar-principal #submenu-unidades {
+    background-color: #42b2cc !important; /* Un tono entre el inicio y fin del degradado */
+}
+.sidebar-principal #submenu-unidades .unidad-item {
+    color: #e2e8f0 !important; /* Mantener texto claro para items del submenú */
+}
+.sidebar-principal #submenu-unidades .unidad-item:hover {
+    background-color: #3aa2bb !important;
+}
+/* Hover general para items de menú en fondos claros */
+.sidebar-principal .menu-item:hover:not(.bg-blue-700) {
+    background-color: rgba(0, 0, 0, 0.08); /* Ligeramente oscuro en hover para fondos claros */
+}
+
+
+/* -- Colores para "Unidad 1" (UT1.html) -- */
+.sidebar-ut1 {
+    background: linear-gradient(180deg, #2d6073 0%, #1e404c 100%);
+    color: white;
+}
+.sidebar-ut1 .text-white {
+    color: white !important;
+}
+.sidebar-ut1 .text-gray-400 {
+    color: #a0aec0 !important;
+}
+/* Item activo para UT1 */
+.sidebar-ut1 .menu-item.bg-blue-700 {
+    background-color: #3b7b90 !important; /* Tono de azul que combina */
+}
+/* Submenú para UT1 */
+.sidebar-ut1 #submenu-unidades {
+    background-color: #244d5c !important; /* Tono más oscuro para el submenú */
+}
+.sidebar-ut1 #submenu-unidades .unidad-item {
+    color: #e2e8f0 !important;
+}
+.sidebar-ut1 #submenu-unidades .unidad-item:hover {
+    background-color: #3b7b90 !important;
+}
+
+
+/* -- Colores para "Unidad 2" (UT2.html) -- */
+.sidebar-ut2 {
+    background: linear-gradient(180deg, #b5e8c3 0%, #9fc9a8 100%);
+    color: #1a202c !important;
+}
+.sidebar-ut2 .text-white {
+    color: #1a202c !important;
+}
+.sidebar-ut2 .text-gray-400 {
+    color: #4a5568 !important;
+}
+/* Item activo para UT2 */
+.sidebar-ut2 .menu-item.bg-blue-700 {
+    background-color: #92c49f !important;
+    color: white !important;
+}
+/* Submenú para UT2 */
+.sidebar-ut2 #submenu-unidades {
+    background-color: #9eccad !important;
+}
+.sidebar-ut2 #submenu-unidades .unidad-item {
+    color: #1a202c !important; /* Texto oscuro para submenú claro */
+}
+.sidebar-ut2 #submenu-unidades .unidad-item:hover {
+    background-color: #92c49f !important;
+}
+/* Hover general para items de menú en fondos claros */
+.sidebar-ut2 .menu-item:hover:not(.bg-blue-700) {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+
+/* -- Colores para "Unidad 3" (UT3.html) -- */
+.sidebar-ut3 {
+    background: linear-gradient(180deg, #65b8a6 0%, #4b897b 100%);
+    color: white;
+}
+.sidebar-ut3 .text-white {
+    color: white !important;
+}
+.sidebar-ut3 .text-gray-400 {
+    color: #a0aec0 !important;
+}
+/* Item activo para UT3 */
+.sidebar-ut3 .menu-item.bg-blue-700 {
+    background-color: #529487 !important;
+}
+/* Submenú para UT3 */
+.sidebar-ut3 #submenu-unidades {
+    background-color: #468c7e !important;
+}
+.sidebar-ut3 #submenu-unidades .unidad-item {
+    color: #e2e8f0 !important;
+}
+.sidebar-ut3 #submenu-unidades .unidad-item:hover {
+    background-color: #529487 !important;
+}
+
+
+/* -- Colores para "Unidad 4" (UT4.html) -- */
+.sidebar-ut4 {
+    background: linear-gradient(180deg, #f0f7da 0%, #c4c9b3 100%);
+    color: #1a202c !important;
+}
+.sidebar-ut4 .text-white {
+    color: #1a202c !important;
+}
+.sidebar-ut4 .text-gray-400 {
+    color: #4a5568 !important;
+}
+/* Item activo para UT4 */
+.sidebar-ut4 .menu-item.bg-blue-700 {
+    background-color: #dbe4b8 !important;
+    color: #1a202c !important;
+}
+/* Submenú para UT4 */
+.sidebar-ut4 #submenu-unidades {
+    background-color: #e2e8c2 !important;
+}
+.sidebar-ut4 #submenu-unidades .unidad-item {
+    color: #1a202c !important;
+}
+.sidebar-ut4 #submenu-unidades .unidad-item:hover {
+    background-color: #dbe4b8 !important;
+}
+/* Hover general para items de menú en fondos claros */
+.sidebar-ut4 .menu-item:hover:not(.bg-blue-700) {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
 
 /* Elementos del menú */
 .menu-item {
     transition: all 0.3s;
 }
 
+/* El hover general se mantiene, pero las variantes de unidad pueden tener uno específico */
 .menu-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
     transform: translateX(5px);
@@ -57,7 +222,7 @@ body {
 }
 
 #submenu-unidades a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    /* background-color: rgba(255, 255, 255, 0.1); - Este se sobrescribe por las clases de unidad */
     padding-left: 1.25rem;
 }
 
