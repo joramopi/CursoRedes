@@ -26,33 +26,33 @@ body {
 
 /* -- Colores para "Principal" (index.html) -- */
 .sidebar-principal {
-    background: linear-gradient(180deg, #50d1eb 0%, #3aa2bb 100%); /* Colores claros */
-    color: #1a202c !important; /* Texto oscuro para contrastar con fondo claro */
+    background-color: #1e6495; /* CAMBIO: Nuevo color de fondo */
+    color: white !important; /* Mantener texto blanco para contraste */
 }
-.sidebar-principal .text-white { /* Sobrescribe text-white de Tailwind */
-    color: #1a202c !important;
+.sidebar-principal .text-white {
+    color: white !important; /* Asegura que cualquier elemento con text-white sea realmente blanco */
 }
-.sidebar-principal .text-gray-400 { /* Sobrescribe text-gray-400 de Tailwind */
-    color: #4a5568 !important; /* Gris más oscuro para contrastar */
+.sidebar-principal .text-gray-400 {
+    color: #a0aec0 !important; /* Mantener un gris más claro adecuado para fondos oscuros */
 }
 /* Item activo para Principal */
 .sidebar-principal .menu-item.bg-blue-700 {
-    background-color: #3aa2bb !important; /* Tono de azul que combina */
+    background-color: #2c79a8 !important; /* CAMBIO: Tono de azul ligeramente más claro para el estado activo */
     color: white !important; /* Asegura que el texto activo sea blanco */
 }
 /* Submenú para Principal */
 .sidebar-principal #submenu-unidades {
-    background-color: #42b2cc !important; /* Un tono entre el inicio y fin del degradado */
+    background-color: #2772a1 !important; /* CAMBIO: Tono ligeramente diferente para el submenú */
 }
 .sidebar-principal #submenu-unidades .unidad-item {
     color: #e2e8f0 !important; /* Mantener texto claro para items del submenú */
 }
 .sidebar-principal #submenu-unidades .unidad-item:hover {
-    background-color: #3aa2bb !important;
+    background-color: #2c79a8 !important; /* CAMBIO: Igual que el color activo o similar */
 }
-/* Hover general para items de menú en fondos claros */
+/* Hover general para items de menú en fondos oscuros */
 .sidebar-principal .menu-item:hover:not(.bg-blue-700) {
-    background-color: rgba(0, 0, 0, 0.08); /* Ligeramente oscuro en hover para fondos claros */
+    background-color: rgba(255, 255, 255, 0.1); /* Mantener para fondos oscuros */
 }
 
 
